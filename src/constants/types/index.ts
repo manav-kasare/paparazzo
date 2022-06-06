@@ -59,12 +59,9 @@ export interface ILocation {
   country?: string;
 }
 export interface IUseData {
-  isDark: boolean;
-  handleIsDark: (isDark?: boolean) => void;
   theme: ITheme;
   setTheme: (theme?: ITheme) => void;
   user: IUser;
-  users: IUser[];
   handleUser: (data?: IUser) => void;
   notifications: INotification[];
   handleNotifications: (data?: INotification[]) => void;

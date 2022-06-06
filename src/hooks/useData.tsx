@@ -1,13 +1,12 @@
 import React, {useCallback, useContext, useState} from 'react';
 import {dark} from '../constants';
-import {USERS} from '../constants/mocks';
 import {ITheme, IUseData, IUser} from '../constants/types';
 
 export const DataContext = React.createContext({});
 
 export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [theme, setTheme] = useState<ITheme>(dark);
-  const [user, setUser] = useState<IUser>(USERS[0]);
+  const [user, setUser] = useState<IUser | null>(null);
 
   // handle user
   const handleUser = useCallback(
