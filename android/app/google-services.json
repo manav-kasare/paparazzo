@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "674023547039",
+    "project_id": "paparazzo-8992f",
+    "storage_bucket": "paparazzo-8992f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674023547039:android:a559c827b58d2b07c782aa",
+        "android_client_info": {
+          "package_name": "com.paparazzo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674023547039-juq38ke38hfsj2u2av4vrpim3sbvd3gh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paparazzo",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "674023547039-he8gh6aa5b6bmvsg7r3v5iss2uucht81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARhwkxfVDsAQwaFWuUYcCsQhrPxbTpfMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674023547039-he8gh6aa5b6bmvsg7r3v5iss2uucht81.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
