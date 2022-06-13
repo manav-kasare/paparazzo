@@ -1,12 +1,16 @@
+import {Formik, FormikValues} from 'formik';
 import React, {useState} from 'react';
+import {ActivityIndicator, StatusBar} from 'react-native';
+import * as Yup from 'yup';
 import {Block, Button, Input, Seperator, Text} from '../components';
 import {useTheme} from '../hooks';
-import {Formik} from 'formik';
-import * as Yup from 'yup';
-import {StatusBar} from 'react-native';
+import {authenticate} from '../services/api';
+import {showToast} from '../services/toast';
 
 export default function Onboard() {
   const {colors, sizes, gradients} = useTheme();
+
+  const [loading, setLoading] = useState(false);
 
   const initialValues = {
     email: '',
@@ -22,15 +26,19 @@ export default function Onboard() {
       .required('Password is required'),
   });
 
-  const onSubmit = async () => {};
+  const onSubmit = async (values: FormikValues) => {
+    setLoading(true);
+    const response = await authenticate(values.email, values.password);
+    console.log('authenticate', response);
+    if (response.error) {
+      setLoading(false);
+      showToast('error', response.error);
+    }
+    setLoading(false);
+  };
 
   return (
-    <Block
-      flex={1}
-      start={{x: 1, y: 0}}
-      end={{x: 0, y: 1}}
-      gradient={gradients.primary}>
-      <StatusBar translucent backgroundColor={'transparent'} />
+    <Block flex={1} gradient={gradients.primary}>
       <Text logo marginVertical={sizes.xxl} align="center">
         Paparazzo
       </Text>
@@ -90,10 +98,15 @@ export default function Onboard() {
                 </Text>
               )}
               <Button
+                disabled={loading}
                 marginTop={sizes.sm}
                 onPress={handleSubmit}
                 gradient={gradients.primary}>
-                <Text size={sizes.sm}>Submit</Text>
+                {loading ? (
+                  <ActivityIndicator color={colors.text} />
+                ) : (
+                  <Text size={sizes.sm}>Submit</Text>
+                )}
               </Button>
             </Block>
           )}

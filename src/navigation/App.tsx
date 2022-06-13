@@ -1,17 +1,18 @@
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {Platform, StatusBar} from 'react-native';
-import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import {StatusBar} from 'react-native';
 import {ThemeProvider, useData} from '../hooks';
-import Tabs from './Tabs';
 import {getJson} from '../services/store';
 import Auth from './Auth';
+import Tabs from './Tabs';
 
 export default function () {
   const {theme, setTheme, user, handleUser} = useData();
 
   useEffect(() => {
     // Platform.OS === 'android' && StatusBar.setTranslucent(true);
-    StatusBar.setBackgroundColor(theme.colors.background);
+    StatusBar.setBackgroundColor('transparent');
+    StatusBar.setTranslucent(true);
     StatusBar.setBarStyle('light-content');
     checkUser();
     return () => {
