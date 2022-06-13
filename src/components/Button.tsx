@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {IButtonProps} from '../constants/types';
 import useTheme from '../hooks/useTheme';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Button = ({
   id = 'Button',
@@ -67,6 +68,8 @@ const Button = ({
   bottom,
   haptic = true,
   vibrate,
+  end,
+  start,
   vibrateRepeat,
   onPress,
   ...props
@@ -214,24 +217,24 @@ const Button = ({
   const buttonID =
     Platform.OS === 'android' ? {accessibilityLabel: id} : {testID: id};
 
-  // if (gradient) {
-  //   return (
-  //     <TouchableOpacity
-  //       {...buttonID}
-  //       activeOpacity={activeOpacity}
-  //       onPress={handlePress}
-  //       {...props}
-  //       style={buttonStyles}>
-  //       <LinearGradient
-  //         style={gradientStyles}
-  //         colors={gradient}
-  //         start={[0, 1]}
-  //         end={[1, 0]}>
-  //         {children}
-  //       </LinearGradient>
-  //     </TouchableOpacity>
-  //   );
-  // }
+  if (gradient) {
+    return (
+      <TouchableOpacity
+        {...buttonID}
+        activeOpacity={activeOpacity}
+        onPress={handlePress}
+        {...props}
+        style={buttonStyles}>
+        <LinearGradient
+          colors={gradient}
+          style={gradientStyles}
+          end={end || {x: 1, y: 0}}
+          start={start || {x: 0, y: 0}}>
+          {children}
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
 
   return (
     <TouchableOpacity

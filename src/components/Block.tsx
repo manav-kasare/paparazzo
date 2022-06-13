@@ -10,6 +10,7 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {IBlockProps} from '../constants/types';
 import useTheme from '../hooks/useTheme';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Block = (props: IBlockProps) => {
   const {
@@ -64,6 +65,8 @@ const Block = (props: IBlockProps) => {
     left,
     top,
     bottom,
+    end,
+    start,
     ...rest
   } = props;
   const {colors, sizes} = useTheme();
@@ -188,19 +191,19 @@ const Block = (props: IBlockProps) => {
     );
   }
 
-  // if (gradient) {
-  //   return (
-  //     <LinearGradient
-  //       {...blockID}
-  //       colors={gradient}
-  //       style={blockStyles}
-  //       end={end || [1, 0]}
-  //       start={start || [0, 0]}
-  //       {...rest}>
-  //       {children}
-  //     </LinearGradient>
-  //   );
-  // }
+  if (gradient) {
+    return (
+      <LinearGradient
+        {...blockID}
+        colors={gradient}
+        style={blockStyles}
+        end={end || {x: 1, y: 0}}
+        start={start || {x: 0, y: 0}}
+        {...rest}>
+        {children}
+      </LinearGradient>
+    );
+  }
 
   // if (blur) {
   //   return (

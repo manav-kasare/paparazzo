@@ -30,6 +30,7 @@ const Typography = (props: ITextProps) => {
     bold,
     semibold,
     weight,
+    logo,
     h1,
     h2,
     h3,
@@ -59,6 +60,7 @@ const Typography = (props: ITextProps) => {
     paddingVertical,
     paddingRight,
     paddingLeft,
+
     ...rest
   } = props;
   const {colors, sizes, lines, weights, fonts} = useTheme();
@@ -99,6 +101,12 @@ const Typography = (props: ITextProps) => {
       fontWeight: weights.text,
       fontFamily: fonts.text,
       ...(textColor && {color: textColor}),
+      ...(logo && {
+        fontSize: sizes.h1,
+        lineHeight: lines.h1,
+        fontWeight: weights.h1,
+        fontFamily: fonts.logo,
+      }),
       ...(h1 && {
         fontSize: sizes.h1,
         lineHeight: lines.h1,

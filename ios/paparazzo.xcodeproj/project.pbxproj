@@ -19,6 +19,7 @@
 		A49126D1052141709C386162 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2442D5115CC4CA29FB147AD /* OpenSans-Light.ttf */; };
 		6FD476635949418C98EF9B99 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFF155EEB34D443887403898 /* OpenSans-Regular.ttf */; };
 		15A0DA80FC47475A977423EF /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC10412B5C43459E948BCA3B /* OpenSans-SemiBold.ttf */; };
+		01EBDD8A2F224545A35DFEFB /* CarterOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 32ADBCE88A7F438EA78338E9 /* CarterOne-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		D2442D5115CC4CA29FB147AD /* OpenSans-Light.ttf */ = {isa = PBXFileReference; name = "OpenSans-Light.ttf"; path = "../src/assets/fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		FFF155EEB34D443887403898 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; name = "OpenSans-Regular.ttf"; path = "../src/assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		BC10412B5C43459E948BCA3B /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; name = "OpenSans-SemiBold.ttf"; path = "../src/assets/fonts/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		32ADBCE88A7F438EA78338E9 /* CarterOne-Regular.ttf */ = {isa = PBXFileReference; name = "CarterOne-Regular.ttf"; path = "../src/assets/fonts/CarterOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 				D2442D5115CC4CA29FB147AD /* OpenSans-Light.ttf */,
 				FFF155EEB34D443887403898 /* OpenSans-Regular.ttf */,
 				BC10412B5C43459E948BCA3B /* OpenSans-SemiBold.ttf */,
+				32ADBCE88A7F438EA78338E9 /* CarterOne-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -273,6 +276,7 @@
 				A49126D1052141709C386162 /* OpenSans-Light.ttf in Resources */,
 				6FD476635949418C98EF9B99 /* OpenSans-Regular.ttf in Resources */,
 				15A0DA80FC47475A977423EF /* OpenSans-SemiBold.ttf in Resources */,
+				01EBDD8A2F224545A35DFEFB /* CarterOne-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

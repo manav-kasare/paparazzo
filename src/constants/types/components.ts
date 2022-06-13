@@ -34,6 +34,8 @@ export interface IBlockProps
    * id for testID & accesibilityLabel
    */
   id?: string;
+  start?: any;
+  end?: any;
   /**
    * Renders a View flex style
    * @see https://reactnative.dev/docs/flexbox#proptypes
@@ -230,6 +232,8 @@ export interface IButtonProps extends TouchableOpacityProps, ISpacing {
    * id for testID & accesibilityLabel
    */
   id?: string;
+  start?: any;
+  end?: any;
   /**
    * Renders borderRadius value to maxSize / 2 using
    * maxSize value is calculated from the maximum value from width, minWidth, maxWidth, height, minHeight, maxHeight
@@ -519,6 +523,7 @@ export interface IInputProps extends TextInputProps, ISpacing {
    * Renders a custom borderColor & placeholderTextColor
    * @see https://reactnative.dev/docs/view-style-props#backgroundcolor
    */
+  labelColor?: ColorValue;
   color?: ColorValue;
   /**
    * Renders a borderColor & placeholderTextColor directly from the colors.primary value
@@ -795,6 +800,7 @@ export interface ITextProps extends TextProps, ISpacing {
    * Renders LinearGradient start points
    * @see https://docs.expo.io/versions/latest/sdk/linear-gradient/#props
    */
+  logo?: boolean;
   h1?: boolean;
   /**
    * Renders a Text with predefined fontSize from theme sizes.h2

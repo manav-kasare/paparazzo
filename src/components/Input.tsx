@@ -31,6 +31,7 @@ const Input = ({
   search,
   disabled,
   label,
+  labelColor,
   icon,
   marginBottom,
   marginTop,
@@ -121,7 +122,10 @@ const Input = ({
   return (
     <Block flex={0} style={inputBoxStyles}>
       {label && (
-        <Text bold marginBottom={sizes.s}>
+        <Text
+          bold
+          color={labelColor ? labelColor : colors.text}
+          marginBottom={sizes.s}>
           {label}
         </Text>
       )}
@@ -144,8 +148,8 @@ const Input = ({
           style={inputStyles}
           editable={!disabled}
           placeholderTextColor={inputColor}
-          onFocus={(event) => handleFocus(event, true)}
-          onBlur={(event) => handleFocus(event, false)}
+          onFocus={event => handleFocus(event, true)}
+          onBlur={event => handleFocus(event, false)}
         />
         {danger && assets.warning && (
           <Image

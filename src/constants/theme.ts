@@ -66,7 +66,7 @@ export const ICONS: ThemeIcons = {
   // star: require('../assets/icons/star.png'),
   // train: require('../assets/icons/train.png'),
   // users: require('../assets/icons/users.png'),
-  // warning: require('../assets/icons/warning.png'),
+  warning: require('../assets/icons/warning.png'),
 };
 
 export const ASSETS: ThemeAssets = {
@@ -76,6 +76,7 @@ export const ASSETS: ThemeAssets = {
   OpenSansSemiBold: require('../assets/fonts/OpenSans-SemiBold.ttf'),
   OpenSansExtraBold: require('../assets/fonts/OpenSans-ExtraBold.ttf'),
   OpenSansBold: require('../assets/fonts/OpenSans-Bold.ttf'),
+  CarterOne: require('../assets/fonts/CarterOne-Regular.ttf'),
 
   // backgrounds/logo
   // logo: require('../assets/images/logo.png'),
@@ -112,6 +113,7 @@ export const ASSETS: ThemeAssets = {
 
 export const FONTS: ThemeFonts = {
   // based on font size
+  logo: 'CarterOne-Regular',
   text: 'OpenSans-Regular',
   h1: 'OpenSans-Bold',
   h2: 'OpenSans-Bold',

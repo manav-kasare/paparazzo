@@ -10,21 +10,21 @@ import {THEME as commonTheme} from './theme';
 
 export const COLORS: ThemeColors = {
   // default text color
-  text: '#fff',
+  text: '#ffffff',
 
   // base colors
   /** UI color for #primary */
-  primary: '#CB0C9F',
+  primary: '#D8B5FF',
   /** UI color for #secondary */
-  secondary: '#627594', // '#8392AB',
+  secondary: '#1EAE98', // '#8392AB',
   /** UI color for #tertiary */
   tertiary: '#E8AE4C',
 
   // non-colors
-  black: '#252F40',
+  black: '#000',
   white: '#FFFFFF',
 
-  dark: '#121212',
+  dark: '#000',
   light: '#E9ECEF',
 
   // gray variations
@@ -43,7 +43,7 @@ export const COLORS: ThemeColors = {
 
   /** UI colors for navigation & card */
   card: '#000',
-  background: '#121212',
+  background: '#2C3037',
 
   /** UI color for shadowColor */
   shadow: '#000000',
@@ -51,7 +51,7 @@ export const COLORS: ThemeColors = {
 
   /** UI color for input borderColor on focus */
   focus: '#E293D3',
-  input: '#252F40',
+  input: '#fff',
 
   /** UI color for switch checked/active color */
   switchOn: '#3A416F',
@@ -77,7 +77,7 @@ export const COLORS: ThemeColors = {
 };
 
 export const GRADIENTS: ThemeGradients = {
-  primary: ['#FF0080', '#7928CA'],
+  primary: ['#D8B5FF', '#1EAE98'],
   secondary: ['#A8B8D8', '#627594'],
   info: ['#21D4FD', '#2152FF'],
   success: ['#98EC2D', '#17AD37'],

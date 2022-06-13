@@ -10,7 +10,8 @@ export default function () {
   const {theme, setTheme, user, handleUser} = useData();
 
   useEffect(() => {
-    Platform.OS === 'android' && StatusBar.setTranslucent(true);
+    // Platform.OS === 'android' && StatusBar.setTranslucent(true);
+    StatusBar.setBackgroundColor(theme.colors.background);
     StatusBar.setBarStyle('light-content');
     checkUser();
     return () => {

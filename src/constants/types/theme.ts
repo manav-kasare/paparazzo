@@ -250,6 +250,7 @@ export interface ThemeAssets {
   OpenSansSemiBold?: any;
   OpenSansExtraBold?: any;
   OpenSansBold?: any;
+  CarterOne?: any;
 
   logo: ImageSourcePropType;
   header: ImageSourcePropType;
@@ -282,6 +283,7 @@ export interface ThemeAssets {
 
 export interface ThemeFonts {
   text: string;
+  logo: string;
   h1: string;
   h2: string;
   h3: string;
