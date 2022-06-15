@@ -228,8 +228,8 @@ const Button = ({
         <LinearGradient
           colors={gradient}
           style={gradientStyles}
-          end={end || {x: 1, y: 0}}
-          start={start || {x: 0, y: 0}}>
+          start={start || {x: 0, y: 0}}
+          end={end || {x: 1, y: 1}}>
           {children}
         </LinearGradient>
       </TouchableOpacity>

@@ -201,10 +201,12 @@ const Typography = (props: ITextProps) => {
         }>
         <LinearGradient
           colors={gradient}
-          end={end || [0.2, 0]}
-          start={start || [0, 0]}
-          style={{flex: 1, height: gradientHeight, flexWrap: 'wrap'}}
-        />
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}>
+          <Text {...textID} {...rest} style={[textStyles, {opacity: 0}]}>
+            {children}
+          </Text>
+        </LinearGradient>
       </MaskedView>
     );
   }

@@ -18,3 +18,5 @@ export const email: RegExp = /^[^\s@]+@[^\s@]+\.([^\s@]{2,})+$/;
  */
 export const password: RegExp =
   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+
+export const username: RegExp = /^[a-zA-Z_](?!.*?\.{2})[\w.]{1,28}[\w]$/;

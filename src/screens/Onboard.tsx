@@ -1,14 +1,15 @@
 import {Formik, FormikValues} from 'formik';
 import React, {useState} from 'react';
-import {ActivityIndicator, StatusBar} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import * as Yup from 'yup';
 import {Block, Button, Input, Seperator, Text} from '../components';
 import {useTheme} from '../hooks';
 import {authenticate} from '../services/api';
+import {navigate} from '../services/navigation';
 import {showToast} from '../services/toast';
 
 export default function Onboard() {
-  const {colors, sizes, gradients} = useTheme();
+  const {colors, sizes, gradients, fonts} = useTheme();
 
   const [loading, setLoading] = useState(false);
 
@@ -34,12 +35,20 @@ export default function Onboard() {
       setLoading(false);
       showToast('error', response.error);
     }
+    navigate('ProfileSetup', {email: values.email});
     setLoading(false);
   };
 
   return (
-    <Block flex={1} gradient={gradients.primary}>
-      <Text logo marginVertical={sizes.xxl} align="center">
+    <Block flex={1}>
+      <Text
+        marginTop={sizes.height * 0.1}
+        marginBottom={sizes.height * 0.05}
+        size={sizes.h1 * 1.25}
+        lineHeight={sizes.h1 * 1.25}
+        bold
+        font={fonts.extrabold}
+        align="center">
         Paparazzo
       </Text>
 
@@ -65,7 +74,14 @@ export default function Onboard() {
           validationSchema={validationSchema}
           initialValues={initialValues}
           onSubmit={onSubmit}>
-          {({handleChange, handleBlur, handleSubmit, values, errors}) => (
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
             <Block keyboard>
               <Input
                 value={values.email}
@@ -74,10 +90,10 @@ export default function Onboard() {
                 label="Email"
                 style={{color: colors.text}}
                 marginBottom={sizes.s}
-                danger={errors.email ? true : false}
+                danger={errors.email && touched.email ? true : false}
               />
-              {errors.email && (
-                <Text size={sizes.sm} danger>
+              {errors.email && touched.email && (
+                <Text gradient={gradients.danger} size={sizes.sm} danger>
                   {errors.email}
                 </Text>
               )}
@@ -86,14 +102,13 @@ export default function Onboard() {
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 label="Password"
-                color={colors.text}
                 marginTop={sizes.sm}
                 marginBottom={sizes.s}
-                danger={errors.password ? true : false}
+                danger={errors.password && touched.password ? true : false}
                 secureTextEntry={true}
               />
-              {errors.password && (
-                <Text size={sizes.sm} danger>
+              {errors.password && touched.password && (
+                <Text gradient={gradients.danger} size={sizes.sm} danger>
                   {errors.password}
                 </Text>
               )}
@@ -101,6 +116,7 @@ export default function Onboard() {
                 disabled={loading}
                 marginTop={sizes.sm}
                 onPress={handleSubmit}
+                haptic
                 gradient={gradients.primary}>
                 {loading ? (
                   <ActivityIndicator color={colors.text} />

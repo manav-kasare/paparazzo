@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function userIsAuthenticated () {
+      return request.auth.uid != null; 
+    }
+
+    function userOwnsResource (userId) {
+      return request.auth.uid == userId  
+    }
+
+    function doesntModifyUsername () {
+      return request.resource.data.keys().hasAny(['username']) == false;
+    }
+  
+    match /users/{user} {
+      allow read: if userIsAuthenticated() && userOwnsResource(user);
+      allow update: if userIsAuthenticated() && doesntModifyUsername(); 
+      allow write: if doesntModifyUsername(); 
+    }
+  }  
+}

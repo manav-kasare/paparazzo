@@ -51,7 +51,7 @@ export const ICONS: ThemeIcons = {
   // flight: require('../assets/icons/flight.png'),
   // home: require('../assets/icons/home.png'),
   // hotel: require('../assets/icons/hotel.png'),
-  // image: require('../assets/icons/image.png'),
+  image: require('../assets/icons/image.png'),
   // location: require('../assets/icons/location.png'),
   // menu: require('../assets/icons/menu.png'),
   // more: require('../assets/icons/more.png'),

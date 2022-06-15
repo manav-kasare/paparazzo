@@ -96,3 +96,8 @@ export interface INotification {
     | 'extras'
     | 'office';
 }
+
+export type AuthStackParamList = {
+  Onboard: undefined;
+  ProfileSetup: {email: string};
+};

@@ -2,6 +2,7 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {ThemeProvider, useData} from '../hooks';
+import {navigationRef} from '../services/navigation';
 import {getJson} from '../services/store';
 import Auth from './Auth';
 import Tabs from './Tabs';
@@ -41,7 +42,7 @@ export default function () {
 
   return (
     <ThemeProvider theme={theme} setTheme={setTheme}>
-      <NavigationContainer theme={navigationTheme}>
+      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         {user ? <Tabs /> : <Auth />}
       </NavigationContainer>
     </ThemeProvider>

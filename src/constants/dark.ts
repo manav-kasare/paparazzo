@@ -14,9 +14,9 @@ export const COLORS: ThemeColors = {
 
   // base colors
   /** UI color for #primary */
-  primary: '#D8B5FF',
+  primary: '#D38312',
   /** UI color for #secondary */
-  secondary: '#1EAE98', // '#8392AB',
+  secondary: '#CA3E47', // '#8392AB',
   /** UI color for #tertiary */
   tertiary: '#E8AE4C',
 
@@ -43,14 +43,14 @@ export const COLORS: ThemeColors = {
 
   /** UI colors for navigation & card */
   card: '#000',
-  background: '#2C3037',
+  background: '#313131',
 
   /** UI color for shadowColor */
   shadow: '#000000',
   overlay: 'rgba(0,0,0,0.3)',
 
   /** UI color for input borderColor on focus */
-  focus: '#E293D3',
+  focus: '#E8AE4C',
   input: '#fff',
 
   /** UI color for switch checked/active color */
@@ -77,7 +77,7 @@ export const COLORS: ThemeColors = {
 };
 
 export const GRADIENTS: ThemeGradients = {
-  primary: ['#D8B5FF', '#1EAE98'],
+  primary: ['#E8AE4C', '#CA3E47'],
   secondary: ['#A8B8D8', '#627594'],
   info: ['#21D4FD', '#2152FF'],
   success: ['#98EC2D', '#17AD37'],

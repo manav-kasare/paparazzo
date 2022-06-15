@@ -1,4 +1,6 @@
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import {getToken} from './fcm';
 
 export const authenticate = async (email: string, password: string) => {
   try {
@@ -31,3 +33,36 @@ export const login = async (email: string, password: string) => {
     return {error, data: null};
   }
 };
+
+export const getRandomId = () => {
+  const chars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let autoId = '';
+  for (let i = 0; i < 20; i++) {
+    autoId += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return autoId;
+};
+
+export const storeUser = async (id: string, payload: any) => {
+  try {
+    const token = await getToken();
+    const data = await firestore()
+      .collection('users')
+      .doc(id)
+      .set({id, fcm: token, ...payload});
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+// export const getUser = async (payload: any) => {
+//   try {
+//     const data = await firestore().collection('users').add(payload);
+//     return {data, error: null};
+//   } catch (error) {
+//     return {error, data: null};
+//   }
+// };
