@@ -4,7 +4,7 @@ import {ActivityIndicator} from 'react-native';
 import * as Yup from 'yup';
 import {Block, Button, Input, Seperator, Text} from '../components';
 import {useTheme} from '../hooks';
-import {authenticate} from '../services/api';
+import {authenticate, getCurrentUser, getUser} from '../services/api';
 import {navigate} from '../services/navigation';
 import {showToast} from '../services/toast';
 
@@ -33,10 +33,19 @@ export default function Onboard() {
     console.log('authenticate', response);
     if (response.error) {
       setLoading(false);
-      showToast('error', response.error);
+      return showToast('error', response.error);
     }
-    navigate('ProfileSetup', {email: values.email});
+
+    if (response.data?.additionalUserInfo?.isNewUser) {
+      setLoading(false);
+      return navigate('ProfileSetup', {
+        email: values.email,
+        userId: response.data.user.uid,
+      });
+    }
+    const _user = await getUser(response.data?.user.uid);
     setLoading(false);
+    console.log('_user', _user);
   };
 
   return (

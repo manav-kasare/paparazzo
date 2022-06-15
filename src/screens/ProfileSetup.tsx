@@ -6,16 +6,19 @@ import ImagePicker from 'react-native-image-crop-picker';
 import * as Yup from 'yup';
 import {Block, Button, Image, Input, Text} from '../components';
 import {username} from '../constants/regex';
-import {useTheme} from '../hooks';
+import {useData, useTheme} from '../hooks';
 import {getRandomId, storeUser} from '../services/api';
 import imageUpload from '../services/imageUpload';
+import {storeJson} from '../services/store';
+import {showToast} from '../services/toast';
 
 export default function ProfileSetup() {
   const {sizes, colors, gradients, icons} = useTheme();
+  const {handleUser} = useData();
   const [loading, setLoading] = useState(false);
   const route = useRoute<any>();
 
-  const {email} = route.params;
+  const {email, userId} = route.params;
 
   const initialValues = {
     username: '',
@@ -44,15 +47,30 @@ export default function ProfileSetup() {
   };
 
   const onSubmit = async (values: any) => {
-    const id = getRandomId();
-    const imageResponse = await imageUpload(id, values.avatar);
+    setLoading(true);
+    const imageResponse = await imageUpload(userId, values.avatar);
     console.log('imageResponse', imageResponse);
-    // const payload = {
-    //   username: values.username,
-    //   email,
-    // };
-    // const response = await storeUser(payload);
-    // console.log('response', response);
+    if (imageResponse.error) {
+      setLoading(false);
+      return showToast('error', 'Could not upload image!');
+    }
+    const payload = {
+      username: values.username,
+      email,
+      avatar: imageResponse.data,
+      followers: 0,
+      following: 0,
+      friends: 0,
+    };
+    const response = await storeUser(userId, payload);
+    console.log('response', response);
+    if (response.error) {
+      setLoading(false);
+      return showToast('error', 'Could not sign up!');
+    }
+    setLoading(false);
+    handleUser(response.data);
+    storeJson('user', response.data);
   };
 
   return (

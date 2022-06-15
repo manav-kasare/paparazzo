@@ -52,17 +52,28 @@ export const storeUser = async (id: string, payload: any) => {
       .collection('users')
       .doc(id)
       .set({id, fcm: token, ...payload});
+    return {data: {id, fcm: token, ...payload}, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const getUser = async (userId: string | undefined) => {
+  try {
+    console.log('getting user', userId);
+    const doc = await firestore().collection('users').doc(userId).get();
+    const data = doc.data();
     return {data, error: null};
   } catch (error) {
     return {error, data: null};
   }
 };
 
-// export const getUser = async (payload: any) => {
-//   try {
-//     const data = await firestore().collection('users').add(payload);
-//     return {data, error: null};
-//   } catch (error) {
-//     return {error, data: null};
-//   }
-// };
+export const getCurrentUser = () => {
+  try {
+    const data = auth().currentUser;
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
