@@ -14,11 +14,11 @@ export const COLORS: ThemeColors = {
 
   // base colors
   /** UI color for #primary */
-  primary: '#D38312',
+  primary: '#D6D5A8',
   /** UI color for #secondary */
-  secondary: '#CA3E47', // '#8392AB',
+  secondary: '#816797', // '#8392AB',
   /** UI color for #tertiary */
-  tertiary: '#E8AE4C',
+  tertiary: '#51557E',
 
   // non-colors
   black: '#000',
@@ -42,8 +42,8 @@ export const COLORS: ThemeColors = {
   info: '#17C1E8',
 
   /** UI colors for navigation & card */
-  card: '#000',
-  background: '#313131',
+  card: '#51557E',
+  background: '#1B2430',
 
   /** UI color for shadowColor */
   shadow: '#000000',
@@ -77,7 +77,7 @@ export const COLORS: ThemeColors = {
 };
 
 export const GRADIENTS: ThemeGradients = {
-  primary: ['#E8AE4C', '#CA3E47'],
+  primary: ['#816797', '#51557E'],
   secondary: ['#A8B8D8', '#627594'],
   info: ['#21D4FD', '#2152FF'],
   success: ['#98EC2D', '#17AD37'],

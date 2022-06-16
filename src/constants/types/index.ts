@@ -5,13 +5,13 @@ export * from './components';
 export * from './theme';
 
 export interface IUser {
-  id: number | string;
-  name?: string;
-  department?: string;
-  avatar?: string;
-  stats?: {posts?: number; followers?: number; following?: number};
-  social?: {twitter?: string; dribbble?: string};
-  about?: string;
+  id: string;
+  username: string;
+  avatar: string;
+  email: string;
+  followers: number;
+  following: number;
+  friends: number;
 }
 
 export interface ICategory {

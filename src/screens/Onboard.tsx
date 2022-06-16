@@ -3,13 +3,15 @@ import React, {useState} from 'react';
 import {ActivityIndicator} from 'react-native';
 import * as Yup from 'yup';
 import {Block, Button, Input, Seperator, Text} from '../components';
-import {useTheme} from '../hooks';
+import {useData, useTheme} from '../hooks';
 import {authenticate, getCurrentUser, getUser} from '../services/api';
 import {navigate} from '../services/navigation';
+import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
 
 export default function Onboard() {
   const {colors, sizes, gradients, fonts} = useTheme();
+  const {handleUser} = useData();
 
   const [loading, setLoading] = useState(false);
 
@@ -43,9 +45,17 @@ export default function Onboard() {
         userId: response.data.user.uid,
       });
     }
-    const _user = await getUser(response.data?.user.uid);
+    const userResponse = await getUser(response.data?.user.uid);
+    if (userResponse.error) {
+      setLoading(false);
+      return showToast('error', response.error);
+    }
     setLoading(false);
-    console.log('_user', _user);
+    if (userResponse.data) {
+      handleUser(userResponse.data);
+      storeJson('user', userResponse.data);
+      console.log('_user', userResponse.data);
+    }
   };
 
   return (
