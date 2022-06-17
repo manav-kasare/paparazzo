@@ -280,6 +280,7 @@ export interface IButtonProps extends TouchableOpacityProps, ISpacing {
    * Renders a backgroundColor directly from the colors.tertiary value
    * @see https://reactnative.dev/docs/view-style-props#backgroundcolor
    */
+
   tertiary?: boolean;
   /**
    * Renders a backgroundColor directly from the colors.gray value
@@ -880,4 +881,10 @@ export interface ITextProps extends TextProps, ISpacing {
   style?: TextStyle;
   start?: any;
   end?: any;
+}
+
+export interface ITile {
+  text: string;
+  danger?: boolean;
+  onPress?: () => void;
 }

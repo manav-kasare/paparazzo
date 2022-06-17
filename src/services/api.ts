@@ -48,7 +48,7 @@ export const getRandomId = () => {
 export const storeUser = async (id: string, payload: any) => {
   try {
     const token = await getToken();
-    const data = await firestore()
+    await firestore()
       .collection('users')
       .doc(id)
       .set({id, fcm: token, ...payload});
@@ -72,6 +72,22 @@ export const getUser = async (userId: string | undefined) => {
 export const getCurrentUser = () => {
   try {
     const data = auth().currentUser;
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const updateDoc = async (
+  collection: string,
+  docId: string,
+  payload: any,
+) => {
+  try {
+    const data = await firestore()
+      .collection(collection)
+      .doc(docId)
+      .update(payload);
     return {data, error: null};
   } catch (error) {
     return {error, data: null};

@@ -6,5 +6,6 @@ import Modal from './Modal';
 import Checkbox from './Checkbox';
 import Image from './Image';
 import Seperator from './Seperator';
+import Tile from './Tile';
 
-export {Block, Button, Input, Text, Checkbox, Image, Modal, Seperator};
+export {Block, Button, Input, Text, Checkbox, Image, Modal, Seperator, Tile};

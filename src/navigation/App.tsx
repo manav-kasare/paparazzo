@@ -5,6 +5,7 @@ import {ThemeProvider, useData} from '../hooks';
 import {navigationRef} from '../services/navigation';
 import {getJson} from '../services/store';
 import Auth from './Auth';
+import Screens from './Screens';
 import Tabs from './Tabs';
 
 export default function () {
@@ -43,7 +44,7 @@ export default function () {
   return (
     <ThemeProvider theme={theme} setTheme={setTheme}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
-        {user ? <Tabs /> : <Auth />}
+        {user ? <Screens /> : <Auth />}
       </NavigationContainer>
     </ThemeProvider>
   );

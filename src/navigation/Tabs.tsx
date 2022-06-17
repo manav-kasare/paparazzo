@@ -5,10 +5,12 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import {useTheme} from '../hooks';
 import {Feed, Profile, Search} from '../screens';
+import {Block, Button} from '../components';
+import {NavigationProp} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-export default function Tabs() {
+export default function Tabs({navigation}: {navigation: any}) {
   const {sizes, colors} = useTheme();
   return (
     <Tab.Navigator
@@ -56,6 +58,11 @@ export default function Tabs() {
         name="Profile"
         component={Profile}
         options={{
+          headerRight: () => (
+            <Button onPress={() => navigation.navigate('Settings')}>
+              <Feather name="settings" size={sizes.m} color={colors.text} />
+            </Button>
+          ),
           tabBarIcon: ({focused}) => (
             <SimpleLineIcons
               name="user"

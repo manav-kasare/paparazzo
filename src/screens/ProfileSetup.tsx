@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import {Block, Button, Image, Input, Text} from '../components';
 import {username} from '../constants/regex';
 import {useData, useTheme} from '../hooks';
-import {getRandomId, storeUser} from '../services/api';
+import {storeUser} from '../services/api';
 import imageUpload from '../services/imageUpload';
 import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
