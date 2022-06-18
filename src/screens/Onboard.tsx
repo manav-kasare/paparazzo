@@ -4,7 +4,7 @@ import {ActivityIndicator} from 'react-native';
 import * as Yup from 'yup';
 import {Block, Button, Input, Seperator, Text} from '../components';
 import {useData, useTheme} from '../hooks';
-import {authenticate, getCurrentUser, getUser} from '../services/api';
+import {authenticate, getDoc} from '../services/api';
 import {navigate} from '../services/navigation';
 import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
@@ -45,7 +45,7 @@ export default function Onboard() {
         userId: response.data.user.uid,
       });
     }
-    const userResponse = await getUser(response.data?.user.uid);
+    const userResponse = await getDoc('users', response.data?.user.uid);
     if (userResponse.error) {
       setLoading(false);
       return showToast('error', response.error);

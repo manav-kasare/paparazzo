@@ -12,6 +12,7 @@ export interface IUser {
   followers: number;
   following: number;
   friends: number;
+  private?: boolean;
 }
 
 export interface ICategory {

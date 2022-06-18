@@ -61,8 +61,8 @@ export default function Profile() {
       <Block
         color={colors.card}
         style={{
-          borderBottomLeftRadius: sizes.socialRadius,
-          borderBottomRightRadius: sizes.socialRadius,
+          borderBottomLeftRadius: sizes.cardRadius,
+          borderBottomRightRadius: sizes.cardRadius,
         }}
         flex={0}>
         <Button
@@ -73,7 +73,7 @@ export default function Profile() {
           radius={(sizes.height * 0.13) / 2}
           color={colors.gray}
           style={{alignSelf: 'center'}}
-          marginVertical={sizes.md}
+          marginVertical={sizes.padding}
           align="center"
           justify="center">
           <Image

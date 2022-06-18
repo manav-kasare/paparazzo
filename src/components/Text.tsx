@@ -1,10 +1,8 @@
 import React from 'react';
 import {Platform, StyleSheet, Text, TextStyle} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import MaskedView from '@react-native-community/masked-view';
 
-import useTheme from '../hooks/useTheme';
 import {ITextProps} from '../constants/types';
+import useTheme from '../hooks/useTheme';
 
 const Typography = (props: ITextProps) => {
   const {
@@ -191,25 +189,25 @@ const Typography = (props: ITextProps) => {
   const textID =
     Platform.OS === 'android' ? {accessibilityLabel: id} : {testID: id};
 
-  if (gradient) {
-    return (
-      <MaskedView
-        maskElement={
-          <Text {...textID} {...rest} style={textStyles}>
-            {children}
-          </Text>
-        }>
-        <LinearGradient
-          colors={gradient}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}>
-          <Text {...textID} {...rest} style={[textStyles, {opacity: 0}]}>
-            {children}
-          </Text>
-        </LinearGradient>
-      </MaskedView>
-    );
-  }
+  // if (gradient) {
+  //   return (
+  //     <MaskedView
+  //       maskElement={
+  //         <Text {...textID} {...rest} style={textStyles}>
+  //           {children}
+  //         </Text>
+  //       }>
+  //       <LinearGradient
+  //         colors={gradient}
+  //         start={{x: 0, y: 0}}
+  //         end={{x: 1, y: 1}}>
+  //         <Text {...textID} {...rest} style={[textStyles, {opacity: 0}]}>
+  //           {children}
+  //         </Text>
+  //       </LinearGradient>
+  //     </MaskedView>
+  //   );
+  // }
 
   return (
     <Text {...textID} {...rest} style={textStyles}>

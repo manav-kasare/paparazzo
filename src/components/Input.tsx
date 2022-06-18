@@ -14,6 +14,9 @@ import Text from './Text';
 import useTheme from '../hooks/useTheme';
 import {IInputProps} from '../constants/types';
 
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Button from './Button';
+
 const Input = ({
   id = 'Input',
   style,
@@ -39,6 +42,7 @@ const Input = ({
   marginVertical,
   marginRight,
   marginLeft,
+  handleSearch,
   onFocus,
   onBlur,
   ...props
@@ -130,10 +134,12 @@ const Input = ({
         </Text>
       )}
       <Block row align="center" justify="flex-end" style={inputContainerStyles}>
-        {search && assets.search && (
-          <Image
-            source={assets.search}
-            style={{marginLeft: sizes.inputPadding, tintColor: colors.icon}}
+        {search && (
+          <Ionicons
+            name="search"
+            size={20}
+            color={colors.text}
+            style={{marginHorizontal: sizes.s}}
           />
         )}
         {icon && (
@@ -151,6 +157,13 @@ const Input = ({
           onFocus={event => handleFocus(event, true)}
           onBlur={event => handleFocus(event, false)}
         />
+        {search && (
+          <Button haptic marginRight={sizes.s} onPress={handleSearch}>
+            <Text color={colors.primary} bold>
+              Search
+            </Text>
+          </Button>
+        )}
         {danger && assets.warning && (
           <Image
             source={assets.warning}

@@ -1,12 +1,10 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import {Button} from '../components';
 import {useTheme} from '../hooks';
 import {Feed, Profile, Search} from '../screens';
-import {Block, Button} from '../components';
-import {NavigationProp} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,11 +14,11 @@ export default function Tabs({navigation}: {navigation: any}) {
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          borderRadius: sizes.avatarRadius,
+          borderTopRightRadius: sizes.cardRadius,
+          borderTopLeftRadius: sizes.cardRadius,
           backgroundColor: colors.card,
-          margin: sizes.md,
           position: 'absolute',
-          height: sizes.height * 0.075,
+          height: sizes.height * 0.08,
           borderTopColor: 'transparent',
         },
         tabBarShowLabel: false,

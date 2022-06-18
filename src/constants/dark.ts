@@ -139,8 +139,8 @@ export const SIZES: ThemeSizes = {
 
   // image sizes
   imageRadius: 14,
-  avatarSize: 32,
-  avatarRadius: 8,
+  avatarSize: 75,
+  avatarRadius: 75 / 2,
 
   // switch sizes
   switchWidth: 50,

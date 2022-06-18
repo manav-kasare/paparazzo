@@ -525,6 +525,7 @@ export interface IInputProps extends TextInputProps, ISpacing {
    * @see https://reactnative.dev/docs/view-style-props#backgroundcolor
    */
   labelColor?: ColorValue;
+  handleSearch?: () => void;
   color?: ColorValue;
   /**
    * Renders a borderColor & placeholderTextColor directly from the colors.primary value

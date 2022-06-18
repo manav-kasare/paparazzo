@@ -7,5 +7,17 @@ import Checkbox from './Checkbox';
 import Image from './Image';
 import Seperator from './Seperator';
 import Tile from './Tile';
+import UserTile from './UserTile';
 
-export {Block, Button, Input, Text, Checkbox, Image, Modal, Seperator, Tile};
+export {
+  Block,
+  Button,
+  Input,
+  Text,
+  Checkbox,
+  Image,
+  Modal,
+  Seperator,
+  Tile,
+  UserTile,
+};

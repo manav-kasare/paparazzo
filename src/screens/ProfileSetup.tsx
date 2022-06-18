@@ -71,6 +71,7 @@ export default function ProfileSetup() {
     setLoading(false);
     handleUser(response.data);
     storeJson('user', response.data);
+    return showToast('success', 'Registered successfully!');
   };
 
   return (

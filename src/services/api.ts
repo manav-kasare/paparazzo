@@ -34,36 +34,12 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const getRandomId = () => {
-  const chars =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let autoId = '';
-  for (let i = 0; i < 20; i++) {
-    autoId += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-
-  return autoId;
-};
-
 export const storeUser = async (id: string, payload: any) => {
   try {
     const token = await getToken();
-    await firestore()
-      .collection('users')
-      .doc(id)
-      .set({id, fcm: token, ...payload});
-    return {data: {id, fcm: token, ...payload}, error: null};
-  } catch (error) {
-    return {error, data: null};
-  }
-};
-
-export const getUser = async (userId: string | undefined) => {
-  try {
-    console.log('getting user', userId);
-    const doc = await firestore().collection('users').doc(userId).get();
-    const data = doc.data();
-    return {data, error: null};
+    const finalPayload = {id, private: true, fcm: [token], ...payload};
+    await firestore().collection('users').doc(id).set(finalPayload);
+    return {data: finalPayload, error: null};
   } catch (error) {
     return {error, data: null};
   }
@@ -88,6 +64,30 @@ export const updateDoc = async (
       .collection(collection)
       .doc(docId)
       .update(payload);
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const getDoc = async (collection: string, docId: string) => {
+  try {
+    const doc = await firestore().collection(collection).doc(docId).get();
+    const data = doc.data();
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const searchUsers = async (userId: string, query: string) => {
+  try {
+    const docs = await firestore()
+      .collection('users')
+      .where('id', '!=', userId)
+      .where('username', '==', query)
+      .get();
+    const data = docs.docs.map(item => item.data());
     return {data, error: null};
   } catch (error) {
     return {error, data: null};
