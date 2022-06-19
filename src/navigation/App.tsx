@@ -1,7 +1,9 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
+import {IUser} from '../constants/types';
 import {ThemeProvider, useData} from '../hooks';
+import {getDoc} from '../services/api';
 import {navigationRef} from '../services/navigation';
 import {getJson} from '../services/store';
 import Auth from './Auth';
@@ -24,7 +26,12 @@ export default function () {
 
   const checkUser = async () => {
     const _user = await getJson('user');
-    handleUser(_user);
+    if (_user && __DEV__) {
+      const fbUser = await getDoc('users', _user.id);
+      handleUser(fbUser.data);
+    } else {
+      handleUser(_user);
+    }
   };
 
   const navigationTheme = {

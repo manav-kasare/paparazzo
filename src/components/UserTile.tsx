@@ -16,10 +16,29 @@ interface Props {
   friends: number;
   private?: boolean;
   isFollowing?: boolean;
+  handleFollow: (remoteUser: any) => void;
+  handleUnfollow: (remoteUser: any) => void;
 }
 
-function UserTile({avatar, username, id, isFollowing}: Props) {
+function UserTile({
+  avatar,
+  username,
+  id,
+  isFollowing,
+  handleFollow,
+  handleUnfollow,
+}: Props) {
   const {sizes, colors} = useTheme();
+
+  const onPress = () => {
+    const remoteUser = {id, username, avatar};
+    if (isFollowing) {
+      handleUnfollow(remoteUser);
+    } else {
+      handleFollow(remoteUser);
+    }
+  };
+
   return (
     <Button
       flex={0}
@@ -56,6 +75,7 @@ function UserTile({avatar, username, id, isFollowing}: Props) {
         <Button
           color={colors.background}
           flex={1}
+          onPress={onPress}
           marginHorizontal={sizes.padding}
           paddingVertical={sizes.s}>
           <Text>{isFollowing ? 'Unfollow' : 'Follow'}</Text>

@@ -7,6 +7,9 @@ export const DataContext = React.createContext({});
 export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [theme, setTheme] = useState<ITheme>(dark);
   const [user, setUser] = useState<IUser | null>(null);
+  const [following, setFollowing] = useState<Array<any> | null>(null);
+  const [followers, setFollowers] = useState<Array<any> | null>(null);
+  const [friends, setFriends] = useState<Array<any> | null>(null);
 
   // handle user
   const handleUser = useCallback(
@@ -24,6 +27,12 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     setTheme,
     user,
     handleUser,
+    following,
+    setFollowing,
+    followers,
+    setFollowers,
+    friends,
+    setFriends,
   };
 
   return (

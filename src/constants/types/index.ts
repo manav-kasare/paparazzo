@@ -63,9 +63,15 @@ export interface IUseData {
   theme: ITheme;
   setTheme: (theme?: ITheme) => void;
   user: IUser;
-  handleUser: (data?: IUser) => void;
+  handleUser: (data?: IUser | any) => void;
   notifications: INotification[];
   handleNotifications: (data?: INotification[]) => void;
+  following: Array<any>;
+  setFollowing: (user: any) => void;
+  followers: Array<any>;
+  setFollowers: (user: any) => void;
+  friends: Array<any>;
+  setFriends: (user: any) => void;
 }
 
 export interface IExtra {

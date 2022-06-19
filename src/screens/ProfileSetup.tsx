@@ -87,20 +87,20 @@ export default function ProfileSetup() {
           <Block keyboard marginVertical={sizes.md}>
             <Button
               gradient={gradients.primary}
-              height={sizes.avatarSize * 4}
-              width={sizes.avatarSize * 4}
+              height={sizes.avatarSize * 2}
+              width={sizes.avatarSize * 2}
               align="center"
               justify="center"
               onPress={() => handleImage(setFieldValue)}
               style={{alignSelf: 'center'}}
-              radius={sizes.avatarSize * 2}>
+              radius={sizes.avatarSize}>
               {values.avatar ? (
                 <Image
                   source={{uri: values.avatar}}
-                  height={sizes.avatarSize * 4}
-                  width={sizes.avatarSize * 4}
+                  height={sizes.avatarSize * 2}
+                  width={sizes.avatarSize * 2}
                   style={{alignSelf: 'center'}}
-                  radius={sizes.avatarSize * 2}
+                  radius={sizes.avatarSize}
                 />
               ) : (
                 <Image source={icons.image} height={20} width={20} radius={0} />

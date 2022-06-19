@@ -1,5 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import {IUser} from '../constants/types';
 import {getToken} from './fcm';
 
 export const authenticate = async (email: string, password: string) => {
@@ -104,6 +105,97 @@ export const getFollowing = async (userId: string) => {
       .get();
     const data = doc.data();
     return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const follow = async (user: any, remoteUser: any) => {
+  try {
+    // my user
+    await firestore()
+      .collection('following')
+      .doc(user.id)
+      .set(
+        {
+          users: firestore.FieldValue
+            ? firestore.FieldValue.arrayUnion(remoteUser)
+            : [remoteUser],
+        },
+        {merge: true},
+      );
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('following')
+      .doc(user.id)
+      .set({[remoteUser.id]: true}, {merge: true});
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .update({following: firestore.FieldValue.increment(1)});
+    // remote user
+    await firestore()
+      .collection('followers')
+      .doc(remoteUser.id)
+      .set({
+        users: firestore.FieldValue
+          ? firestore.FieldValue.arrayUnion(user)
+          : [user],
+      });
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('followers')
+      .doc(remoteUser.id)
+      .set({[user.id]: true}, {merge: true});
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .update({followers: firestore.FieldValue.increment(1)});
+    return {data: 'Success', error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const unfollow = async (user: any, remoteUser: any) => {
+  try {
+    // my user
+    await firestore()
+      .collection('following')
+      .doc(user.id)
+      .update({
+        users: firestore.FieldValue.arrayRemove(remoteUser),
+      });
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('following')
+      .doc(user.id)
+      .update({[remoteUser.id]: firestore.FieldValue.delete()});
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .update({following: firestore.FieldValue.increment(-1)});
+    // remote user
+    await firestore()
+      .collection('followers')
+      .doc(remoteUser.id)
+      .update({
+        users: firestore.FieldValue.arrayRemove(user),
+      });
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('followers')
+      .doc(remoteUser.id)
+      .update({[user.id]: firestore.FieldValue.delete()});
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .update({followers: firestore.FieldValue.increment(-1)});
+    return {data: 'Success', error: null};
   } catch (error) {
     return {error, data: null};
   }
