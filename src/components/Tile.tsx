@@ -1,12 +1,12 @@
 import React from 'react';
+import {Switch} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {ITile} from '../constants/types';
 import {useTheme} from '../hooks';
-import Block from './Block';
 import Button from './Button';
 import Text from './Text';
 
-function Tile({text, danger, onPress}: ITile) {
+function Tile({text, danger, _switch, onPress, switchActive}: ITile) {
   const {sizes, colors} = useTheme();
   return (
     <Button
@@ -20,11 +20,15 @@ function Tile({text, danger, onPress}: ITile) {
       <Text size={sizes.h5} lineHeight={sizes.h5} danger={danger}>
         {text}
       </Text>
-      <Feather
-        name="chevron-right"
-        size={sizes.md}
-        color={danger ? colors.danger : colors.text}
-      />
+      {_switch ? (
+        <Switch onValueChange={onPress} value={switchActive} />
+      ) : (
+        <Feather
+          name="chevron-right"
+          size={sizes.md}
+          color={danger ? colors.danger : colors.text}
+        />
+      )}
     </Button>
   );
 }

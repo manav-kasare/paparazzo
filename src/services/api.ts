@@ -93,3 +93,18 @@ export const searchUsers = async (userId: string, query: string) => {
     return {error, data: null};
   }
 };
+
+export const getFollowing = async (userId: string) => {
+  try {
+    const doc = await firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('following')
+      .doc(userId)
+      .get();
+    const data = doc.data();
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};

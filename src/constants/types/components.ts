@@ -887,5 +887,7 @@ export interface ITextProps extends TextProps, ISpacing {
 export interface ITile {
   text: string;
   danger?: boolean;
+  _switch?: boolean;
+  switchActive?: boolean;
   onPress?: () => void;
 }

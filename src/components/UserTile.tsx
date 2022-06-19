@@ -6,7 +6,19 @@ import Button from './Button';
 import Image from './Image';
 import Text from './Text';
 
-function UserTile({avatar, username, id}: IUser) {
+interface Props {
+  id: string;
+  username: string;
+  avatar: string;
+  email: string;
+  followers: number;
+  following: number;
+  friends: number;
+  private?: boolean;
+  isFollowing?: boolean;
+}
+
+function UserTile({avatar, username, id, isFollowing}: Props) {
   const {sizes, colors} = useTheme();
   return (
     <Button
@@ -46,7 +58,7 @@ function UserTile({avatar, username, id}: IUser) {
           flex={1}
           marginHorizontal={sizes.padding}
           paddingVertical={sizes.s}>
-          <Text>Follow</Text>
+          <Text>{isFollowing ? 'Unfollow' : 'Follow'}</Text>
         </Button>
         <Button
           color={colors.background}
