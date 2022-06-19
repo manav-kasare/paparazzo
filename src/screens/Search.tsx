@@ -1,6 +1,8 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {Block, Input, UserTile} from '../components';
+import EmptyList from '../components/EmptyList';
 import {username} from '../constants/regex';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
@@ -20,14 +22,21 @@ export default function Search() {
   const [query, setQuery] = useState('');
   const [users, setUsers] = useState<Array<any>>([]);
   const [_following, _setFollowing] = useState<any | null>(null);
+  const [searched, setSearched] = useState(false);
+  const navigation = useNavigation();
 
-  useEffect(() => {
+  navigation.addListener('blur', () => {
+    setQuery('');
+    setUsers([]);
+    setSearched(false);
+  });
+
+  navigation.addListener('focus', () => {
     handleGetFollowing();
-  }, []);
+  });
 
   const handleGetFollowing = async () => {
     const response = await getFollowing(user.id);
-    console.log('response', response);
     if (response.error) return;
     _setFollowing(response.data);
   };
@@ -36,6 +45,7 @@ export default function Search() {
     const isValid = username.test(query);
     if (!isValid) return showToast('error', 'Please enter a valid username.');
     const response = await searchUsers(user.id, query);
+    if (!searched) setSearched(true);
     if (response.error)
       return showToast('error', 'Could not search for users!');
     setUsers(response.data ? response.data : []);
@@ -79,7 +89,7 @@ export default function Search() {
   );
 
   return (
-    <Block keyboard>
+    <Block>
       <Block
         flex={0}
         style={{
@@ -99,9 +109,21 @@ export default function Search() {
 
       <Block paddingVertical={sizes.m}>
         <FlatList
+          style={{flex: 1}}
+          contentContainerStyle={{flex: 1}}
           data={users}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={() => (
+            <EmptyList
+              sad={searched}
+              text={
+                searched
+                  ? 'No results found for this username'
+                  : 'To find people you can search above'
+              }
+            />
+          )}
         />
       </Block>
     </Block>

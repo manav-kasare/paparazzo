@@ -36,7 +36,6 @@ export default function Profile() {
   const handleUploadImage = async () => {
     setLoading(true);
     const imageResponse: any = await imageUpload(user.id, avatar);
-    console.log('imageResponse', imageResponse);
     if (imageResponse.error) {
       setLoading(false);
       return showToast('error', 'Could not upload image!');
@@ -111,14 +110,25 @@ export default function Profile() {
           {user.username}
         </Text>
 
-        <Block paddingBottom={sizes.m} marginTop={sizes.s} flex={0} row>
-          <Block align="center" justify="center" paddingVertical={sizes.m}>
+        <Block
+          marginHorizontal={sizes.padding}
+          paddingBottom={sizes.m}
+          marginTop={sizes.s}
+          flex={0}
+          row>
+          <Button
+            flex={1}
+            onPress={() => navigate('Followers')}
+            align="center"
+            justify="center"
+            paddingVertical={sizes.m}>
             <Text size={sizes.h4} bold lineHeight={sizes.h4}>
               {user.followers}
             </Text>
             <Text>Followers</Text>
-          </Block>
+          </Button>
           <Button
+            flex={1}
             onPress={() => navigate('Following')}
             align="center"
             justify="center"
@@ -128,12 +138,16 @@ export default function Profile() {
             </Text>
             <Text>Following</Text>
           </Button>
-          <Block align="center" justify="center" paddingVertical={sizes.m}>
+          <Button
+            flex={1}
+            align="center"
+            justify="center"
+            paddingVertical={sizes.m}>
             <Text size={sizes.h4} bold lineHeight={sizes.h4}>
               {user.friends}
             </Text>
             <Text>Friends</Text>
-          </Block>
+          </Button>
         </Block>
       </Block>
 

@@ -1,17 +1,21 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
-import {Block, SmallUserTile, UserTile} from '../components';
+import {Block, Loading, SmallUserTile, UserTile} from '../components';
+import EmptyList from '../components/EmptyList';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
 import {getDoc, unfollow} from '../services/api';
+import {navigate} from '../services/navigation';
 import {storeJson} from '../services/store';
 
 export default function Following() {
   const {sizes} = useTheme();
   const {following, setFollowing, user, handleUser} = useData();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!following) {
+      setLoading(true);
       handleGetFollowing();
     }
   }, []);
@@ -32,6 +36,7 @@ export default function Following() {
     const response = await getDoc('following', user.id);
     if (response.error) return;
     setFollowing(response.data?.users);
+    setLoading(false);
   };
 
   const renderItem = ({item}: any) => (
@@ -42,13 +47,33 @@ export default function Following() {
     />
   );
 
+  const action = () => {
+    navigate('Home', {
+      screen: 'Search',
+    });
+  };
+
   return (
     <Block paddingVertical={sizes.padding}>
-      <FlatList
-        data={following}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          style={{flex: 1}}
+          data={following}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={following && !following.length && {flex: 1}}
+          ListEmptyComponent={() => (
+            <EmptyList
+              sad
+              text="You aren't following anyone yet"
+              action={action}
+              actionText="Find People"
+            />
+          )}
+        />
+      )}
     </Block>
   );
 }
