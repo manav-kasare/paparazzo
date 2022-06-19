@@ -200,3 +200,45 @@ export const unfollow = async (user: any, remoteUser: any) => {
     return {error, data: null};
   }
 };
+
+export const removeFollower = async (user: any, remoteUser: any) => {
+  try {
+    // my user
+    await firestore()
+      .collection('followers')
+      .doc(user.id)
+      .update({
+        users: firestore.FieldValue.arrayRemove(remoteUser),
+      });
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('followers')
+      .doc(user.id)
+      .update({[remoteUser.id]: firestore.FieldValue.delete()});
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .update({followers: firestore.FieldValue.increment(-1)});
+    // remote user
+    await firestore()
+      .collection('following')
+      .doc(remoteUser.id)
+      .update({
+        users: firestore.FieldValue.arrayRemove(user),
+      });
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('following')
+      .doc(remoteUser.id)
+      .update({[user.id]: firestore.FieldValue.delete()});
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .update({following: firestore.FieldValue.increment(-1)});
+    return {data: 'Success', error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};

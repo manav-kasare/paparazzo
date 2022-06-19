@@ -20,6 +20,13 @@ export default function Following() {
     }
   }, []);
 
+  const handleGetFollowing = async () => {
+    const response = await getDoc('following', user.id);
+    if (response.error) return;
+    setFollowing(response.data?.users);
+    setLoading(false);
+  };
+
   const handleUnfollow = async (remoteUser: IUser) => {
     if (following) {
       setFollowing((prev: Array<any>) =>
@@ -32,19 +39,8 @@ export default function Following() {
     storeJson('user', {...user, following: user.following - 1});
   };
 
-  const handleGetFollowing = async () => {
-    const response = await getDoc('following', user.id);
-    if (response.error) return;
-    setFollowing(response.data?.users);
-    setLoading(false);
-  };
-
   const renderItem = ({item}: any) => (
-    <SmallUserTile
-      handleUnfollow={handleUnfollow}
-      isFollowing={true}
-      {...item}
-    />
+    <SmallUserTile type="following" handleUnfollow={handleUnfollow} {...item} />
   );
 
   const action = () => {

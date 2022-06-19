@@ -9,22 +9,26 @@ interface Props {
   id: string;
   username: string;
   avatar: string;
-  isFollowing?: boolean;
+  type: string;
   handleUnfollow?: (remoteUser: any) => void;
+  handleRemoveFollower?: (remoteUser: any) => void;
 }
 
 function SmallUserTile({
   id,
   username,
   avatar,
-  isFollowing,
   handleUnfollow,
+  handleRemoveFollower,
+  type,
 }: Props) {
   const {sizes, colors} = useTheme();
 
   const onPress = () => {
     const remoteUser = {id, username, avatar};
-    handleUnfollow && handleUnfollow(remoteUser);
+    if (type === 'following') handleUnfollow && handleUnfollow(remoteUser);
+    else if (type === 'followers')
+      handleRemoveFollower && handleRemoveFollower(remoteUser);
   };
 
   return (
@@ -58,7 +62,13 @@ function SmallUserTile({
             paddingHorizontal={sizes.m}
             onPress={onPress}
             paddingVertical={sizes.s}>
-            <Text>{isFollowing ? 'Unfollow' : 'Follow'}</Text>
+            {type === 'following' ? (
+              <Text>Unfollow</Text>
+            ) : type === 'followers' ? (
+              <Text>Remove</Text>
+            ) : (
+              <Text></Text>
+            )}
           </Button>
         </Block>
       </Block>

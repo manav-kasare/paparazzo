@@ -54,7 +54,6 @@ export default function Onboard() {
     if (userResponse.data) {
       handleUser(userResponse.data);
       storeJson('user', userResponse.data);
-      console.log('_user', userResponse.data);
     }
   };
 
