@@ -16,8 +16,8 @@ interface Props {
   friends: number;
   private?: boolean;
   isFollowing?: boolean;
-  handleFollow: (remoteUser: any) => void;
-  handleUnfollow: (remoteUser: any) => void;
+  handleFollow?: (remoteUser: any) => void;
+  handleUnfollow?: (remoteUser: any) => void;
 }
 
 function UserTile({
@@ -33,9 +33,9 @@ function UserTile({
   const onPress = () => {
     const remoteUser = {id, username, avatar};
     if (isFollowing) {
-      handleUnfollow(remoteUser);
+      handleUnfollow && handleUnfollow(remoteUser);
     } else {
-      handleFollow(remoteUser);
+      handleFollow && handleFollow(remoteUser);
     }
   };
 

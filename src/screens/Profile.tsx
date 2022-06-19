@@ -8,6 +8,7 @@ import imageUpload from '../services/imageUpload';
 import {showToast} from '../services/toast';
 import {updateDoc} from '../services/api';
 import {storeJson} from '../services/store';
+import {navigate} from '../services/navigation';
 
 export default function Profile() {
   const {user, handleUser} = useData();
@@ -117,12 +118,16 @@ export default function Profile() {
             </Text>
             <Text>Followers</Text>
           </Block>
-          <Block align="center" justify="center" paddingVertical={sizes.m}>
+          <Button
+            onPress={() => navigate('Following')}
+            align="center"
+            justify="center"
+            paddingVertical={sizes.m}>
             <Text size={sizes.h4} bold lineHeight={sizes.h4}>
               {user.following}
             </Text>
             <Text>Following</Text>
-          </Block>
+          </Button>
           <Block align="center" justify="center" paddingVertical={sizes.m}>
             <Text size={sizes.h4} bold lineHeight={sizes.h4}>
               {user.friends}

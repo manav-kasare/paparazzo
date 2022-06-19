@@ -8,6 +8,7 @@ import Image from './Image';
 import Seperator from './Seperator';
 import Tile from './Tile';
 import UserTile from './UserTile';
+import SmallUserTile from './SmallUserTile';
 
 export {
   Block,
@@ -20,4 +21,5 @@ export {
   Seperator,
   Tile,
   UserTile,
+  SmallUserTile,
 };

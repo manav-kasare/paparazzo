@@ -11,14 +11,15 @@ import {
   unfollow,
   updateDoc,
 } from '../services/api';
+import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
 
 export default function Search() {
-  const {user, setFollowing, handleUser} = useData();
+  const {user, following, setFollowing, handleUser} = useData();
   const {colors, sizes} = useTheme();
   const [query, setQuery] = useState('');
   const [users, setUsers] = useState<Array<any>>([]);
-  const [following, _setFollowing] = useState<any | null>(null);
+  const [_following, _setFollowing] = useState<any | null>(null);
 
   useEffect(() => {
     handleGetFollowing();
@@ -35,7 +36,6 @@ export default function Search() {
     const isValid = username.test(query);
     if (!isValid) return showToast('error', 'Please enter a valid username.');
     const response = await searchUsers(user.id, query);
-    console.log('response', response);
     if (response.error)
       return showToast('error', 'Could not search for users!');
     setUsers(response.data ? response.data : []);
@@ -45,22 +45,28 @@ export default function Search() {
     _setFollowing((prev: any) =>
       prev ? {...prev, [remoteUser.id]: true} : {[remoteUser.id]: true},
     );
-    setFollowing((prev: any) => (prev ? [...prev, remoteUser] : [remoteUser]));
+    if (following) {
+      setFollowing((prev: any) => [...prev, remoteUser]);
+    }
     handleUser({...user, following: user.following + 1});
     const {id, username, avatar} = user;
     await follow({id, username, avatar}, remoteUser);
+    storeJson('user', {...user, following: user.following + 1});
   };
 
   const handleUnfollow = async (remoteUser: IUser) => {
     _setFollowing((prev: any) => {
       delete prev[remoteUser.id];
     });
-    setFollowing((prev: Array<any>) =>
-      prev ? prev.filter(item => item.id !== remoteUser.id) : [],
-    );
+    if (following) {
+      setFollowing((prev: Array<any>) =>
+        prev.filter(item => item.id !== remoteUser.id),
+      );
+    }
     handleUser({...user, following: user.following - 1});
     const {id, username, avatar} = user;
     await unfollow({id, username, avatar}, remoteUser);
+    storeJson('user', {...user, following: user.following - 1});
   };
 
   const renderItem = ({item}: {item: IUser}) => (
@@ -68,7 +74,7 @@ export default function Search() {
       {...item}
       handleFollow={handleFollow}
       handleUnfollow={handleUnfollow}
-      isFollowing={following && following[item.id]}
+      isFollowing={_following && _following[item.id]}
     />
   );
 
