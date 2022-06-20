@@ -142,6 +142,7 @@ export default function Profile() {
             flex={1}
             align="center"
             justify="center"
+            onPress={() => navigate('Friends')}
             paddingVertical={sizes.m}>
             <Text size={sizes.h4} bold lineHeight={sizes.h4}>
               {user.friends}

@@ -16,8 +16,12 @@ interface Props {
   friends: number;
   private?: boolean;
   isFollowing?: boolean;
+  isFriend?: boolean;
+  requested?: boolean;
   handleFollow?: (remoteUser: any) => void;
   handleUnfollow?: (remoteUser: any) => void;
+  handleSendRequest?: (remoteUser: any) => void;
+  handleRemoveRequest?: (remoteUser: any) => void;
 }
 
 function UserTile({
@@ -27,6 +31,10 @@ function UserTile({
   isFollowing,
   handleFollow,
   handleUnfollow,
+  isFriend,
+  handleSendRequest,
+  handleRemoveRequest,
+  requested,
 }: Props) {
   const {sizes, colors} = useTheme();
 
@@ -39,9 +47,19 @@ function UserTile({
     }
   };
 
+  const onPressRequest = () => {
+    const remoteUser = {id, username, avatar};
+    if (requested) {
+      handleRemoveRequest && handleRemoveRequest(remoteUser);
+    } else {
+      handleSendRequest && handleSendRequest(remoteUser);
+    }
+  };
+
   return (
     <Button
       flex={0}
+      marginVertical={sizes.padding / 2}
       style={{alignSelf: 'center'}}
       radius={sizes.cardRadius}
       color={colors.card}
@@ -81,11 +99,12 @@ function UserTile({
           <Text>{isFollowing ? 'Unfollow' : 'Follow'}</Text>
         </Button>
         <Button
+          onPress={onPressRequest}
           color={colors.background}
           marginHorizontal={sizes.padding}
           flex={1}
           paddingVertical={sizes.s}>
-          <Text>Request</Text>
+          <Text>{requested ? 'Requested' : 'Request'}</Text>
         </Button>
       </Block>
     </Button>

@@ -12,16 +12,25 @@ function Tile({text, danger, _switch, onPress, switchActive}: ITile) {
     <Button
       onPress={onPress}
       flex={0}
+      color={colors.card}
+      width={sizes.width * 0.95}
       justify="space-between"
+      style={{alignSelf: 'center'}}
+      marginVertical={sizes.padding / 2}
       align="center"
       row
-      paddingVertical={sizes.m}
+      paddingVertical={sizes.p}
       paddingHorizontal={sizes.m}>
       <Text size={sizes.h5} lineHeight={sizes.h5} danger={danger}>
         {text}
       </Text>
       {_switch ? (
-        <Switch onValueChange={onPress} value={switchActive} />
+        <Switch
+          thumbColor={colors.primary}
+          ios_backgroundColor={colors.primary}
+          onValueChange={onPress}
+          value={switchActive}
+        />
       ) : (
         <Feather
           name="chevron-right"

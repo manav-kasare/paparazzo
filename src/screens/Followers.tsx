@@ -56,7 +56,7 @@ export default function Followers() {
           data={followers}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={followers && !followers.length && {flex: 1}}
+          contentContainerStyle={(!followers || !followers.length) && {flex: 1}}
           ListEmptyComponent={() => (
             <EmptyList sad text="You don't have any followers yet" />
           )}

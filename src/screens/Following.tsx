@@ -59,7 +59,7 @@ export default function Following() {
           data={following}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={following && !following.length && {flex: 1}}
+          contentContainerStyle={(!following || !following.length) && {flex: 1}}
           ListEmptyComponent={() => (
             <EmptyList
               sad

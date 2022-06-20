@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {Block, Tile} from '../components';
-import {useData} from '../hooks';
+import {useData, useTheme} from '../hooks';
 import {removeItem, storeJson} from '../services/store';
 import auth from '@react-native-firebase/auth';
 import {updateDoc} from '../services/api';
 
 export default function Settings() {
   const {handleUser, user} = useData();
+  const {sizes} = useTheme();
   const [isPrivate, setIsPrivate] = useState(user.private);
 
   const signOut = async () => {
@@ -32,7 +33,7 @@ export default function Settings() {
   };
 
   return (
-    <Block>
+    <Block paddingVertical={sizes.padding}>
       <Tile
         onPress={handleSwitch}
         text="Private"

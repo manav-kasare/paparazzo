@@ -110,6 +110,21 @@ export const getFollowing = async (userId: string) => {
   }
 };
 
+export const getRequests = async (userId: string) => {
+  try {
+    const doc = await firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('requests')
+      .doc('sent')
+      .get();
+    const data = doc.data();
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
 export const follow = async (user: any, remoteUser: any) => {
   try {
     // my user
@@ -238,6 +253,175 @@ export const removeFollower = async (user: any, remoteUser: any) => {
       .doc(remoteUser.id)
       .update({following: firestore.FieldValue.increment(-1)});
     return {data: 'Success', error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const sendFriendRequest = async (user: any, remoteUser: any) => {
+  try {
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('requests')
+      .doc('sent')
+      .set({[remoteUser.id]: true}, {merge: true});
+
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('requests')
+      .doc('received')
+      .set({[user.id]: true}, {merge: true});
+    const payload = {
+      from: user,
+      to: remoteUser.id,
+    };
+    await firestore().collection('requests').add(payload);
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const decline = async (
+  user: any,
+  remoteUser: any,
+  requestId: string,
+) => {
+  try {
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('requests')
+      .doc('received')
+      .update({[remoteUser.id]: firestore.FieldValue.delete()});
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('requests')
+      .doc('sent')
+      .update({[user.id]: firestore.FieldValue.delete()});
+    await firestore().collection('requests').doc(requestId).delete();
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const accept = async (user: any, remoteUser: any, requestId: string) => {
+  try {
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('requests')
+      .doc('received')
+      .update({[remoteUser.id]: firestore.FieldValue.delete()});
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('requests')
+      .doc('sent')
+      .update({[user.id]: firestore.FieldValue.delete()});
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('friends')
+      .doc(user.id)
+      .set(
+        {
+          users: firestore.FieldValue
+            ? firestore.FieldValue.arrayUnion(remoteUser)
+            : [remoteUser],
+        },
+        {merge: true},
+      );
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('friends')
+      .doc(remoteUser.id)
+      .set(
+        {
+          users: firestore.FieldValue
+            ? firestore.FieldValue.arrayUnion(user)
+            : [user],
+        },
+        {merge: true},
+      );
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const removeFriend = async (user: any, remoteUser: any) => {
+  try {
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('friends')
+      .doc(user.id)
+      .set(
+        {
+          users: firestore.FieldValue
+            ? firestore.FieldValue.arrayRemove(remoteUser)
+            : [remoteUser],
+        },
+        {merge: true},
+      );
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('friends')
+      .doc(remoteUser.id)
+      .set(
+        {
+          users: firestore.FieldValue
+            ? firestore.FieldValue.arrayRemove(user)
+            : [user],
+        },
+        {merge: true},
+      );
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const removeRequest = async (user: any, remoteUser: any) => {
+  try {
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .collection('requests')
+      .doc('sent')
+      .set(
+        {
+          [remoteUser.id]: firestore.FieldValue.delete(),
+        },
+        {merge: true},
+      );
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .collection('requests')
+      .doc('sent')
+      .set(
+        {
+          [user.id]: firestore.FieldValue.delete(),
+        },
+        {merge: true},
+      );
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const getRequestsWithId = async (userId: string) => {
+  try {
+    const response = await firestore()
+      .collection('requests')
+      .where('to', '==', userId)
+      .get();
+    const data = response.docs.map(item => item.data());
+    return {data, error: null};
   } catch (error) {
     return {error, data: null};
   }

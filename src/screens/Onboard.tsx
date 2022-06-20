@@ -32,7 +32,6 @@ export default function Onboard() {
   const onSubmit = async (values: FormikValues) => {
     setLoading(true);
     const response = await authenticate(values.email, values.password);
-    console.log('authenticate', response);
     if (response.error) {
       setLoading(false);
       return showToast('error', response.error);

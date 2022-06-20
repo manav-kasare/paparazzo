@@ -12,6 +12,8 @@ interface Props {
   type: string;
   handleUnfollow?: (remoteUser: any) => void;
   handleRemoveFollower?: (remoteUser: any) => void;
+  handleAccept?: (remoteUser: any) => void;
+  handleReject?: (remoteUser: any) => void;
 }
 
 function SmallUserTile({
@@ -21,6 +23,8 @@ function SmallUserTile({
   handleUnfollow,
   handleRemoveFollower,
   type,
+  handleAccept,
+  handleReject,
 }: Props) {
   const {sizes, colors} = useTheme();
 
@@ -56,20 +60,47 @@ function SmallUserTile({
           {username}
         </Text>
         <Block flex={1} align="flex-end">
-          <Button
-            color={colors.background}
-            flex={0}
-            paddingHorizontal={sizes.m}
-            onPress={onPress}
-            paddingVertical={sizes.s}>
-            {type === 'following' ? (
+          {type === 'following' ? (
+            <Button
+              color={colors.background}
+              flex={0}
+              paddingHorizontal={sizes.m}
+              onPress={onPress}
+              paddingVertical={sizes.s}>
               <Text>Unfollow</Text>
-            ) : type === 'followers' ? (
+            </Button>
+          ) : type === 'followers' ? (
+            <Button
+              color={colors.background}
+              flex={0}
+              paddingHorizontal={sizes.m}
+              onPress={onPress}
+              paddingVertical={sizes.s}>
               <Text>Remove</Text>
-            ) : (
-              <Text></Text>
-            )}
-          </Button>
+            </Button>
+          ) : type === 'request' ? (
+            <Block row flex={0}>
+              <Button
+                color={colors.background}
+                flex={0}
+                paddingHorizontal={sizes.m}
+                onPress={handleAccept}
+                paddingVertical={sizes.s}>
+                <Text>Accept</Text>
+              </Button>
+              <Button
+                color={colors.background}
+                flex={0}
+                marginLeft={sizes.padding / 2}
+                paddingHorizontal={sizes.m}
+                onPress={handleReject}
+                paddingVertical={sizes.s}>
+                <Text>Reject</Text>
+              </Button>
+            </Block>
+          ) : (
+            <Text></Text>
+          )}
         </Block>
       </Block>
     </Block>

@@ -72,6 +72,8 @@ export interface IUseData {
   setFollowers: (user: any) => void;
   friends: Array<any>;
   setFriends: (user: any) => void;
+  requests: Array<any>;
+  setRequests: (user: any) => void;
 }
 
 export interface IExtra {

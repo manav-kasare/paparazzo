@@ -10,6 +10,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [following, setFollowing] = useState<Array<any> | null>(null);
   const [followers, setFollowers] = useState<Array<any> | null>(null);
   const [friends, setFriends] = useState<Array<any> | null>(null);
+  const [requests, setRequests] = useState<Array<any> | null>(null);
 
   // handle user
   const handleUser = useCallback(
@@ -33,6 +34,8 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     setFollowers,
     friends,
     setFriends,
+    requests,
+    setRequests,
   };
 
   return (

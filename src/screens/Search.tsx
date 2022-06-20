@@ -9,7 +9,10 @@ import {useData, useTheme} from '../hooks';
 import {
   follow,
   getFollowing,
+  getRequests,
+  removeRequest,
   searchUsers,
+  sendFriendRequest,
   unfollow,
   updateDoc,
 } from '../services/api';
@@ -17,11 +20,19 @@ import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
 
 export default function Search() {
-  const {user, following, setFollowing, handleUser} = useData();
+  const {
+    user,
+    following,
+    setFollowing,
+    handleUser,
+
+    friends,
+  } = useData();
   const {colors, sizes} = useTheme();
   const [query, setQuery] = useState('');
   const [users, setUsers] = useState<Array<any>>([]);
   const [_following, _setFollowing] = useState<any | null>(null);
+  const [requests, setRequests] = useState<any | null>(null);
   const [searched, setSearched] = useState(false);
   const navigation = useNavigation();
 
@@ -33,12 +44,20 @@ export default function Search() {
 
   navigation.addListener('focus', () => {
     handleGetFollowing();
+    handleGetRequests();
   });
 
   const handleGetFollowing = async () => {
     const response = await getFollowing(user.id);
     if (response.error) return;
     _setFollowing(response.data);
+  };
+
+  const handleGetRequests = async () => {
+    const response = await getRequests(user.id);
+    console.log('requests', response);
+    if (response.error) return;
+    setRequests(response.data);
   };
 
   const handleSearch = async () => {
@@ -79,12 +98,29 @@ export default function Search() {
     storeJson('user', {...user, following: user.following - 1});
   };
 
+  const handleSendRequest = async (remoteUser: IUser) => {
+    setRequests((prev: any) =>
+      prev ? {...prev, [remoteUser.id]: true} : {[remoteUser.id]: true},
+    );
+    const {id, username, avatar} = user;
+    await sendFriendRequest({id, username, avatar}, remoteUser);
+  };
+
+  const handleRemoveRequest = async (remoteUser: IUser) => {
+    setRequests((prev: any) => delete prev[remoteUser.id]);
+    const {id, username, avatar} = user;
+    await removeRequest({id, username, avatar}, remoteUser);
+  };
+
   const renderItem = ({item}: {item: IUser}) => (
     <UserTile
       {...item}
       handleFollow={handleFollow}
       handleUnfollow={handleUnfollow}
+      handleSendRequest={handleSendRequest}
+      handleRemoveRequest={handleRemoveRequest}
       isFollowing={_following && _following[item.id]}
+      requested={requests && requests[item.id]}
     />
   );
 

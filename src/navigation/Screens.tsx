@@ -1,6 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {Followers, Following, Friends, Settings} from '../screens';
+import {Followers, Following, Friends, Requests, Settings} from '../screens';
 import Tabs from './Tabs';
 
 const Stack = createNativeStackNavigator();
@@ -30,6 +30,11 @@ export default function Screens() {
       <Stack.Screen
         name="Friends"
         component={Friends}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Requests"
+        component={Requests}
         options={{headerShown: true}}
       />
     </Stack.Navigator>
