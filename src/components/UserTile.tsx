@@ -62,6 +62,8 @@ function UserTile({
   return (
     <Button
       flex={0}
+      row
+      align="center"
       marginVertical={sizes.padding / 2}
       style={{alignSelf: 'center'}}
       radius={sizes.cardRadius}
@@ -81,37 +83,31 @@ function UserTile({
       </Block>
       <Text
         bold
-        marginTop={sizes.padding}
+        marginLeft={sizes.padding / 2}
         size={sizes.h5}
         lineHeight={sizes.h5}>
         {username}
       </Text>
 
-      <Block
-        row
-        marginTop={sizes.padding}
+      <Block />
+
+      <Button
+        color={colors.background}
         flex={0}
-        justify="flex-start"
-        align="center">
-        <Button
-          color={colors.background}
-          flex={1}
-          onPress={onPress}
-          marginHorizontal={sizes.padding}
-          paddingVertical={sizes.s}>
-          <Text>{isFollowing ? 'Unfollow' : 'Follow'}</Text>
-        </Button>
-        <Button
-          onPress={onPressRequest}
-          color={colors.background}
-          marginHorizontal={sizes.padding}
-          flex={1}
-          paddingVertical={sizes.s}>
-          <Text>
-            {isFriend ? 'Friends' : requested ? 'Requested' : 'Request'}
-          </Text>
-        </Button>
-      </Block>
+        onPress={onPress}
+        paddingHorizontal={sizes.padding}>
+        <Text>{isFollowing ? 'Unfollow' : 'Follow'}</Text>
+      </Button>
+      <Button
+        onPress={onPressRequest}
+        color={colors.background}
+        marginLeft={sizes.padding / 2}
+        flex={0}
+        paddingHorizontal={sizes.padding}>
+        <Text>
+          {isFriend ? 'Friends' : requested ? 'Requested' : 'Request'}
+        </Text>
+      </Button>
     </Button>
   );
 }

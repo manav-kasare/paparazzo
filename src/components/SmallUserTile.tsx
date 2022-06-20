@@ -62,12 +62,21 @@ function SmallUserTile({
       paddingHorizontal={sizes.padding}
       paddingVertical={sizes.padding}>
       <Block row align="center">
-        <Image
-          height={sizes.avatarSize * 0.75}
-          width={sizes.avatarSize * 0.75}
-          radius={sizes.avatarRadius * 0.75}
-          source={{uri: avatar}}
-        />
+        <Block
+          flex={0}
+          height={sizes.avatarSize + 3}
+          width={sizes.avatarSize + 3}
+          radius={(sizes.avatarSize + 3) / 2}
+          color={colors.gray}
+          align="center"
+          justify="center">
+          <Image
+            height={sizes.avatarSize}
+            width={sizes.avatarSize}
+            radius={sizes.avatarRadius}
+            source={{uri: avatar}}
+          />
+        </Block>
         <Text
           bold
           marginLeft={sizes.padding}
