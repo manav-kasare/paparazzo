@@ -9,6 +9,7 @@ import {useData, useTheme} from '../hooks';
 import {
   follow,
   getFollowing,
+  getFriends,
   getRequests,
   removeRequest,
   searchUsers,
@@ -20,14 +21,8 @@ import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
 
 export default function Search() {
-  const {
-    user,
-    following,
-    setFollowing,
-    handleUser,
-
-    friends,
-  } = useData();
+  const {user, following, setFollowing, handleUser, friends, setFriends} =
+    useData();
   const {colors, sizes} = useTheme();
   const [query, setQuery] = useState('');
   const [users, setUsers] = useState<Array<any>>([]);
@@ -46,6 +41,19 @@ export default function Search() {
     handleGetFollowing();
     handleGetRequests();
   });
+
+  useEffect(() => {
+    if (!friends) {
+      handleGetFriends();
+    }
+  }, []);
+
+  const handleGetFriends = async () => {
+    const response = await getFriends(user.id);
+    console.log('friends', response);
+    if (response.error) return;
+    setFriends(response.data?.users);
+  };
 
   const handleGetFollowing = async () => {
     const response = await getFollowing(user.id);
@@ -115,6 +123,7 @@ export default function Search() {
   const renderItem = ({item}: {item: IUser}) => (
     <UserTile
       {...item}
+      isFriend={friends.findIndex(_item => _item.id === item.id) !== -1}
       handleFollow={handleFollow}
       handleUnfollow={handleUnfollow}
       handleSendRequest={handleSendRequest}

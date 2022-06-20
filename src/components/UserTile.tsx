@@ -49,6 +49,9 @@ function UserTile({
 
   const onPressRequest = () => {
     const remoteUser = {id, username, avatar};
+    if (isFriend) {
+      return;
+    }
     if (requested) {
       handleRemoveRequest && handleRemoveRequest(remoteUser);
     } else {
@@ -104,7 +107,9 @@ function UserTile({
           marginHorizontal={sizes.padding}
           flex={1}
           paddingVertical={sizes.s}>
-          <Text>{requested ? 'Requested' : 'Request'}</Text>
+          <Text>
+            {isFriend ? 'Friends' : requested ? 'Requested' : 'Request'}
+          </Text>
         </Button>
       </Block>
     </Button>
