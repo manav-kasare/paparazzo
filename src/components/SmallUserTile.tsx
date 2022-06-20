@@ -10,10 +10,12 @@ interface Props {
   username: string;
   avatar: string;
   type: string;
+  requestId?: string;
   handleUnfollow?: (remoteUser: any) => void;
   handleRemoveFollower?: (remoteUser: any) => void;
-  handleAccept?: (remoteUser: any) => void;
-  handleReject?: (remoteUser: any) => void;
+  handleRemoveFriend?: (remoteUser: any) => void;
+  handleAccept?: (remoteUser: any, requestId?: string) => void;
+  handleReject?: (remoteUser: any, requestId?: string) => void;
 }
 
 function SmallUserTile({
@@ -22,7 +24,9 @@ function SmallUserTile({
   avatar,
   handleUnfollow,
   handleRemoveFollower,
+  handleRemoveFriend,
   type,
+  requestId,
   handleAccept,
   handleReject,
 }: Props) {
@@ -33,6 +37,18 @@ function SmallUserTile({
     if (type === 'following') handleUnfollow && handleUnfollow(remoteUser);
     else if (type === 'followers')
       handleRemoveFollower && handleRemoveFollower(remoteUser);
+    else if (type === 'friends')
+      handleRemoveFriend && handleRemoveFriend(remoteUser);
+  };
+
+  const _handleAccept = () => {
+    const remoteUser = {id, username, avatar};
+    handleAccept && handleAccept(remoteUser, requestId);
+  };
+
+  const _handleReject = () => {
+    const remoteUser = {id, username, avatar};
+    handleReject && handleReject(remoteUser, requestId);
   };
 
   return (
@@ -84,7 +100,7 @@ function SmallUserTile({
                 color={colors.background}
                 flex={0}
                 paddingHorizontal={sizes.m}
-                onPress={handleAccept}
+                onPress={_handleAccept}
                 paddingVertical={sizes.s}>
                 <Text>Accept</Text>
               </Button>
@@ -93,13 +109,20 @@ function SmallUserTile({
                 flex={0}
                 marginLeft={sizes.padding / 2}
                 paddingHorizontal={sizes.m}
-                onPress={handleReject}
+                onPress={_handleReject}
                 paddingVertical={sizes.s}>
                 <Text>Reject</Text>
               </Button>
             </Block>
           ) : (
-            <Text></Text>
+            <Button
+              color={colors.background}
+              flex={0}
+              paddingHorizontal={sizes.m}
+              onPress={onPress}
+              paddingVertical={sizes.s}>
+              <Text>Remove</Text>
+            </Button>
           )}
         </Block>
       </Block>

@@ -6,7 +6,14 @@ import auth from '@react-native-firebase/auth';
 import {updateDoc} from '../services/api';
 
 export default function Settings() {
-  const {handleUser, user} = useData();
+  const {
+    handleUser,
+    user,
+    setFollowers,
+    setFollowing,
+    setFriends,
+    setRequests,
+  } = useData();
   const {sizes} = useTheme();
   const [isPrivate, setIsPrivate] = useState(user.private);
 
@@ -14,6 +21,10 @@ export default function Settings() {
     handleUser(undefined);
     await removeItem('user');
     await auth().signOut();
+    setFollowers(null);
+    setFollowing(null);
+    setFriends(null);
+    setRequests(null);
   };
 
   const handleSwitch = async () => {

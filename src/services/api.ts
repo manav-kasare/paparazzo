@@ -283,12 +283,9 @@ export const sendFriendRequest = async (user: any, remoteUser: any) => {
   }
 };
 
-export const decline = async (
-  user: any,
-  remoteUser: any,
-  requestId: string,
-) => {
+export const reject = async (user: any, remoteUser: any, requestId: string) => {
   try {
+    await firestore().collection('requests').doc(requestId).delete();
     await firestore()
       .collection('users')
       .doc(user.id)
@@ -309,6 +306,7 @@ export const decline = async (
 
 export const accept = async (user: any, remoteUser: any, requestId: string) => {
   try {
+    await firestore().collection('requests').doc(requestId).delete();
     await firestore()
       .collection('users')
       .doc(user.id)
@@ -347,6 +345,18 @@ export const accept = async (user: any, remoteUser: any, requestId: string) => {
         },
         {merge: true},
       );
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .update({
+        friends: firestore.FieldValue.increment(1),
+      });
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .update({
+        friends: firestore.FieldValue.increment(1),
+      });
   } catch (error) {
     return {error, data: null};
   }
@@ -380,6 +390,18 @@ export const removeFriend = async (user: any, remoteUser: any) => {
         },
         {merge: true},
       );
+    await firestore()
+      .collection('users')
+      .doc(user.id)
+      .update({
+        friends: firestore.FieldValue.increment(-1),
+      });
+    await firestore()
+      .collection('users')
+      .doc(remoteUser.id)
+      .update({
+        friends: firestore.FieldValue.increment(-1),
+      });
   } catch (error) {
     return {error, data: null};
   }
@@ -420,7 +442,22 @@ export const getRequestsWithId = async (userId: string) => {
       .collection('requests')
       .where('to', '==', userId)
       .get();
-    const data = response.docs.map(item => item.data());
+    const data = response.docs.map(item => ({...item.data(), id: item.id}));
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};
+
+export const getFriends = async (userId: string) => {
+  try {
+    const response = await firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('friends')
+      .doc(userId)
+      .get();
+    const data = response.data();
     return {data, error: null};
   } catch (error) {
     return {error, data: null};
