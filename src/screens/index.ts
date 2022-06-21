@@ -9,3 +9,4 @@ export {default as Following} from './Following';
 export {default as Friends} from './Friends';
 export {default as Requests} from './Requests';
 export {default as User} from './User';
+export {default as CreatePost} from './CreatePost';

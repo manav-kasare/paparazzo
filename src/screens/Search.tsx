@@ -36,8 +36,8 @@ export default function Search() {
     // setQuery('');
     // setUsers([]);
     // setSearched(false);
-    // setRequests(null);
-    // _setFollowing(null);
+    setRequests(null);
+    _setFollowing(null);
   });
 
   navigation.addListener('focus', () => {

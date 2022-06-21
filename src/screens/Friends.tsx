@@ -54,7 +54,7 @@ export default function Friends() {
 
   return (
     <Block paddingVertical={sizes.padding}>
-      <Tile text="Requests" onPress={() => navigate('Requests')} />
+      <Tile text="Friends Requests" onPress={() => navigate('Requests')} />
       {loading ? (
         <Loading />
       ) : (

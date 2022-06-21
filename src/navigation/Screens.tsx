@@ -1,6 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {
+  CreatePost,
   Followers,
   Following,
   Friends,
@@ -29,6 +30,14 @@ export default function Screens() {
       <Stack.Screen name="Friends" component={Friends} />
       <Stack.Screen name="Requests" component={Requests} />
       <Stack.Screen name="User" component={User} options={{headerTitle: ''}} />
+      <Stack.Screen
+        name="CreatePost"
+        component={CreatePost}
+        options={{
+          animation: 'fade_from_bottom',
+          headerTitle: '',
+        }}
+      />
     </Stack.Navigator>
   );
 }

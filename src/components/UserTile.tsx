@@ -34,13 +34,13 @@ function UserTile({
   following,
   friends,
   isFollowing,
+  isFriend,
+  requested,
   handleFollow,
   handleUnfollow,
-  isFriend,
   handleSendRequest,
   handleRemoveRequest,
   handleRemoveFriend,
-  requested,
 }: Props) {
   const {sizes, colors} = useTheme();
 
@@ -78,6 +78,7 @@ function UserTile({
             following,
             friends,
           },
+          isFriend,
         })
       }
       flex={0}

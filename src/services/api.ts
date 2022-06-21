@@ -463,3 +463,12 @@ export const getFriends = async (userId: string) => {
     return {error, data: null};
   }
 };
+
+export const post = async (postId: string, payload: any) => {
+  try {
+    await firestore().collection('posts').doc(postId).set(payload);
+    return {data: 'Success', error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};

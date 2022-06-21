@@ -38,9 +38,7 @@ export default function Requests() {
   const handleReject = async (remoteUser: IUser, requestId: string) => {
     setRequests(requests.filter(item => item.id !== requestId));
     const _user = {id: user.id, username: user.username, avatar: user.avatar};
-    handleUser({...user, friends: user.friends - 1});
     await reject(_user, remoteUser, requestId);
-    storeJson('user', {...user, friends: user.friends - 1});
   };
 
   const renderItem = ({item}: any) => (

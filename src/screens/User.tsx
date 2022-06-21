@@ -1,16 +1,23 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect} from 'react';
+import {useRoute} from '@react-navigation/native';
+import React from 'react';
 import {Block, Button, Image, Text} from '../components';
-import {IUser} from '../constants/types';
 import {useTheme} from '../hooks';
+import {navigate} from '../services/navigation';
 
 export default function User() {
   const {sizes, colors} = useTheme();
   const route = useRoute();
-  const navigation = useNavigation();
-  const {userParam}: any = route.params;
+  const {userParam, isFriend}: any = route.params;
   const {id, username, avatar, isPrivate, followers, following, friends} =
     userParam;
+
+  const handlePost = () => {
+    navigate('CreatePost', {
+      remoteUser: {
+        id,
+      },
+    });
+  };
 
   return (
     <Block>
@@ -20,65 +27,81 @@ export default function User() {
           borderBottomLeftRadius: sizes.cardRadius,
           borderBottomRightRadius: sizes.cardRadius,
         }}
+        paddingHorizontal={sizes.padding}
         flex={0}>
-        <Block
-          flex={0}
-          height={sizes.height * 0.13}
-          width={sizes.height * 0.13}
-          radius={(sizes.height * 0.13) / 2}
-          color={colors.gray}
-          style={{alignSelf: 'center'}}
-          marginVertical={sizes.padding}
-          align="center"
-          justify="center">
-          <Image
-            height={sizes.height * 0.125}
-            width={sizes.height * 0.125}
-            radius={(sizes.height * 0.125) / 2}
-            source={{uri: avatar}}
-          />
+        <Block flex={0} row>
+          <Block flex={0}>
+            <Block
+              flex={0}
+              height={sizes.avatarSize * 1.6}
+              width={sizes.avatarSize * 1.6}
+              radius={sizes.avatarRadius * 1.6}
+              color={colors.gray}
+              style={{alignSelf: 'center'}}
+              align="center"
+              justify="center">
+              <Image
+                height={sizes.avatarSize * 1.5}
+                width={sizes.avatarSize * 1.5}
+                radius={sizes.avatarRadius * 1.5}
+                source={{uri: avatar}}
+              />
+            </Block>
+
+            <Text
+              align="center"
+              bold
+              size={sizes.h5}
+              marginTop={sizes.padding}
+              lineHeight={sizes.h5}>
+              {username}
+            </Text>
+          </Block>
+          <Block marginHorizontal={sizes.padding} paddingBottom={sizes.m} row>
+            <Block
+              flex={1}
+              align="center"
+              justify="center"
+              paddingVertical={sizes.m}>
+              <Text size={sizes.h4} bold lineHeight={sizes.h4}>
+                {followers}
+              </Text>
+              <Text>Followers</Text>
+            </Block>
+            <Block
+              flex={1}
+              align="center"
+              justify="center"
+              paddingVertical={sizes.m}>
+              <Text size={sizes.h4} bold lineHeight={sizes.h4}>
+                {following}
+              </Text>
+              <Text>Following</Text>
+            </Block>
+            <Block
+              flex={1}
+              align="center"
+              justify="center"
+              paddingVertical={sizes.m}>
+              <Text size={sizes.h4} bold lineHeight={sizes.h4}>
+                {friends}
+              </Text>
+              <Text>Friends</Text>
+            </Block>
+          </Block>
         </Block>
 
-        <Text align="center" bold size={sizes.h4} lineHeight={sizes.h4}>
-          {username}
-        </Text>
-
-        <Block
-          marginHorizontal={sizes.padding}
-          paddingBottom={sizes.m}
-          marginTop={sizes.s}
-          flex={0}
-          row>
-          <Button
-            flex={1}
-            align="center"
-            justify="center"
-            paddingVertical={sizes.m}>
-            <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-              {followers}
-            </Text>
-            <Text>Followers</Text>
-          </Button>
-          <Button
-            flex={1}
-            align="center"
-            justify="center"
-            paddingVertical={sizes.m}>
-            <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-              {following}
-            </Text>
-            <Text>Following</Text>
-          </Button>
-          <Button
-            flex={1}
-            align="center"
-            justify="center"
-            paddingVertical={sizes.m}>
-            <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-              {friends}
-            </Text>
-            <Text>Friends</Text>
-          </Button>
+        <Block marginVertical={sizes.padding} row flex={0}>
+          {isFriend && (
+            <Button
+              flex={1}
+              onPress={handlePost}
+              color={colors.background}
+              marginLeft={sizes.padding / 2}
+              paddingHorizontal={sizes.padding}>
+              <Text>Post</Text>
+            </Button>
+          )}
         </Block>
       </Block>
 
