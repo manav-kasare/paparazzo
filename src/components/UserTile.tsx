@@ -1,5 +1,6 @@
 import React from 'react';
 import {useTheme} from '../hooks';
+import {navigate} from '../services/navigation';
 import Block from './Block';
 import Button from './Button';
 import Image from './Image';
@@ -13,7 +14,7 @@ interface Props {
   followers: number;
   following: number;
   friends: number;
-  private?: boolean;
+  isPrivate?: boolean;
   isFollowing?: boolean;
   isFriend?: boolean;
   requested?: boolean;
@@ -28,6 +29,10 @@ function UserTile({
   avatar,
   username,
   id,
+  isPrivate,
+  followers,
+  following,
+  friends,
   isFollowing,
   handleFollow,
   handleUnfollow,
@@ -62,6 +67,19 @@ function UserTile({
 
   return (
     <Button
+      onPress={() =>
+        navigate('User', {
+          userParam: {
+            id,
+            username,
+            avatar,
+            isPrivate,
+            followers,
+            following,
+            friends,
+          },
+        })
+      }
       flex={0}
       row
       align="center"

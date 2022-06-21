@@ -8,3 +8,4 @@ export {default as Followers} from './Followers';
 export {default as Following} from './Following';
 export {default as Friends} from './Friends';
 export {default as Requests} from './Requests';
+export {default as User} from './User';

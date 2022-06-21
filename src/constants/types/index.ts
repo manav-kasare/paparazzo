@@ -110,3 +110,12 @@ export type AuthStackParamList = {
   Onboard: undefined;
   ProfileSetup: {email: string};
 };
+
+export type ScreensStackParamList = {
+  Settings: undefined;
+  Followers: undefined;
+  Following: undefined;
+  Friends: undefined;
+  Requests: undefined;
+  User: {userParam: any};
+};

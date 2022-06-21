@@ -21,7 +21,6 @@ export default function Requests() {
 
   const handleGetRequests = async () => {
     const response = await getRequestsWithId(user.id);
-    console.log('response', response);
     if (response.error) return;
     setRequests(response.data);
     setLoading(false);

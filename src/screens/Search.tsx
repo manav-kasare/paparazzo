@@ -33,9 +33,11 @@ export default function Search() {
   const navigation = useNavigation();
 
   navigation.addListener('blur', () => {
-    setQuery('');
-    setUsers([]);
-    setSearched(false);
+    // setQuery('');
+    // setUsers([]);
+    // setSearched(false);
+    // setRequests(null);
+    // _setFollowing(null);
   });
 
   navigation.addListener('focus', () => {
@@ -51,7 +53,6 @@ export default function Search() {
 
   const handleGetFriends = async () => {
     const response = await getFriends(user.id);
-    console.log('friends', response);
     if (response.error) return;
     setFriends(response.data?.users);
   };
@@ -64,7 +65,6 @@ export default function Search() {
 
   const handleGetRequests = async () => {
     const response = await getRequests(user.id);
-    console.log('requests', response);
     if (response.error) return;
     setRequests(response.data);
   };
@@ -134,6 +134,7 @@ export default function Search() {
   const renderItem = ({item}: {item: IUser}) => (
     <UserTile
       {...item}
+      isPrivate={item.private}
       isFriend={friends.findIndex(_item => _item.id === item.id) !== -1}
       handleFollow={handleFollow}
       handleUnfollow={handleUnfollow}
