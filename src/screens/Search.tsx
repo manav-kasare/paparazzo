@@ -11,6 +11,7 @@ import {
   getFollowing,
   getFriends,
   getRequests,
+  removeFriend,
   removeRequest,
   searchUsers,
   sendFriendRequest,
@@ -120,6 +121,16 @@ export default function Search() {
     await removeRequest({id, username, avatar}, remoteUser);
   };
 
+  const handleRemoveFriend = async (remoteUser: IUser) => {
+    setFriends((prev: Array<any>) =>
+      prev.filter(item => item.id !== remoteUser.id),
+    );
+    const _user = {id: user.id, username: user.username, avatar: user.avatar};
+    handleUser({...user, friends: user.friends - 1});
+    await removeFriend(_user, remoteUser);
+    storeJson('user', {...user, friends: user.friends - 1});
+  };
+
   const renderItem = ({item}: {item: IUser}) => (
     <UserTile
       {...item}
@@ -128,6 +139,7 @@ export default function Search() {
       handleUnfollow={handleUnfollow}
       handleSendRequest={handleSendRequest}
       handleRemoveRequest={handleRemoveRequest}
+      handleRemoveFriend={handleRemoveFriend}
       isFollowing={_following && _following[item.id]}
       requested={requests && requests[item.id]}
     />

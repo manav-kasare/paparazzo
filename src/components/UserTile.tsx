@@ -1,5 +1,4 @@
 import React from 'react';
-import {IUser} from '../constants/types';
 import {useTheme} from '../hooks';
 import Block from './Block';
 import Button from './Button';
@@ -22,6 +21,7 @@ interface Props {
   handleUnfollow?: (remoteUser: any) => void;
   handleSendRequest?: (remoteUser: any) => void;
   handleRemoveRequest?: (remoteUser: any) => void;
+  handleRemoveFriend?: (remoteUser: any) => void;
 }
 
 function UserTile({
@@ -34,6 +34,7 @@ function UserTile({
   isFriend,
   handleSendRequest,
   handleRemoveRequest,
+  handleRemoveFriend,
   requested,
 }: Props) {
   const {sizes, colors} = useTheme();
@@ -50,7 +51,7 @@ function UserTile({
   const onPressRequest = () => {
     const remoteUser = {id, username, avatar};
     if (isFriend) {
-      return;
+      handleRemoveFriend && handleRemoveFriend(remoteUser);
     }
     if (requested) {
       handleRemoveRequest && handleRemoveRequest(remoteUser);
@@ -104,9 +105,7 @@ function UserTile({
         marginLeft={sizes.padding / 2}
         flex={0}
         paddingHorizontal={sizes.padding}>
-        <Text>
-          {isFriend ? 'Friends' : requested ? 'Requested' : 'Request'}
-        </Text>
+        <Text>{isFriend ? 'Friend' : requested ? 'Requested' : 'Request'}</Text>
       </Button>
     </Button>
   );
