@@ -19,8 +19,7 @@ export default function Profile() {
   const [imageChanged, setImageChanged] = useState(false);
   const [avatar, setAvatar] = useState(user.avatar);
   const [loading, setLoading] = useState(false);
-  const [posts, setPosts] = useState<any[]>([]);
-  const [type, setType] = useState('collage');
+  const [posts, setPosts] = useState<IPost[]>([]);
 
   useEffect(() => {
     handleGetPosts();
@@ -59,7 +58,6 @@ export default function Profile() {
       avatar: imageResponse.data,
     };
     const response = await updateDoc('users', user.id, payload);
-    console.log('response', response);
     if (response.error) {
       setLoading(false);
       return showToast('error', 'Could not update image!');
@@ -71,19 +69,14 @@ export default function Profile() {
     await storeJson('user', {...user, ...payload});
   };
 
-  const onPress = (item: IPost) => {
-    navigate('Posts', {posts, item});
-  };
-
   const renderItem = ({item}: {item: IPost}) => (
     <Button
-      onPress={() => onPress(item)}
+      onPress={() => navigate('Posts', {posts, item})}
       marginHorizontal={sizes.width * 0.025 * 0.5}
       marginVertical={sizes.width * 0.025 * 0.5}
       width={sizes.width * 0.475}
       height={sizes.width * 0.475}>
       <Image
-        radius={0}
         height={sizes.width * 0.475}
         width={sizes.width * 0.475}
         resizeMode="contain"
@@ -156,7 +149,8 @@ export default function Profile() {
             </Text>
           </Block>
           <Block marginHorizontal={sizes.padding} paddingBottom={sizes.m} row>
-            <Block
+            <Button
+              onPress={() => navigate('Followers')}
               flex={1}
               align="center"
               justify="center"
@@ -165,8 +159,9 @@ export default function Profile() {
                 {user.followers}
               </Text>
               <Text>Followers</Text>
-            </Block>
-            <Block
+            </Button>
+            <Button
+              onPress={() => navigate('Following')}
               flex={1}
               align="center"
               justify="center"
@@ -175,8 +170,9 @@ export default function Profile() {
                 {user.following}
               </Text>
               <Text>Following</Text>
-            </Block>
-            <Block
+            </Button>
+            <Button
+              onPress={() => navigate('Friends')}
               flex={1}
               align="center"
               justify="center"
@@ -185,7 +181,7 @@ export default function Profile() {
                 {user.friends}
               </Text>
               <Text>Friends</Text>
-            </Block>
+            </Button>
           </Block>
         </Block>
       </Block>

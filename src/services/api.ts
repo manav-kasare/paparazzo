@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import {IUser} from '../constants/types';
+import {IPost, IUser} from '../constants/types';
 import {getToken} from './fcm';
 
 export const authenticate = async (email: string, password: string) => {
@@ -479,7 +479,16 @@ export const getPosts = async (userId: string) => {
       .collection('posts')
       .where('user.id', '==', userId)
       .get();
-    const data = docsData.docs.map(item => item.data());
+    const data = docsData.docs.map(item => {
+      const itemData = item.data();
+      return {
+        id: itemData.id,
+        image: itemData.image,
+        postedBy: itemData.postedBy,
+        user: itemData.user,
+        caption: itemData.caption,
+      } as IPost;
+    });
     return {data, error: null};
   } catch (error) {
     return {error, data: null};

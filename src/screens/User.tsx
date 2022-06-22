@@ -1,9 +1,13 @@
 import {useRoute} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {FlatList} from 'react-native';
 import {Block, Button, Image, Text} from '../components';
 import EmptyList from '../components/EmptyList';
+import {IPost} from '../constants/types';
 import {useTheme} from '../hooks';
+import {getPosts} from '../services/api';
 import {navigate} from '../services/navigation';
+import {showToast} from '../services/toast';
 
 export default function User() {
   const {sizes, colors} = useTheme();
@@ -12,7 +16,19 @@ export default function User() {
   const {id, username, avatar, isPrivate, followers, following, friends} =
     userParam;
 
-  const canSeePosts = isFollowing || !isPrivate;
+  const canSeePosts = isFollowing || isFriend || !isPrivate;
+
+  const [posts, setPosts] = useState<IPost[]>([]);
+
+  useEffect(() => {
+    if (canSeePosts) handleGetPosts();
+  }, []);
+
+  const handleGetPosts = async () => {
+    const response = await getPosts(id);
+    if (response.error) return showToast('error', 'Could not get posts');
+    setPosts(response.data ? response.data : []);
+  };
 
   const handlePost = () => {
     navigate('CreatePost', {
@@ -23,6 +39,22 @@ export default function User() {
       },
     });
   };
+
+  const renderItem = ({item}: {item: IPost}) => (
+    <Button
+      onPress={() => navigate('Posts', {posts, item})}
+      marginHorizontal={sizes.width * 0.025 * 0.5}
+      marginVertical={sizes.width * 0.025 * 0.5}
+      width={sizes.width * 0.475}
+      height={sizes.width * 0.475}>
+      <Image
+        height={sizes.width * 0.475}
+        width={sizes.width * 0.475}
+        resizeMode="contain"
+        source={{uri: item.image}}
+      />
+    </Button>
+  );
 
   return (
     <Block>
@@ -110,9 +142,19 @@ export default function User() {
         </Block>
       </Block>
 
-      <Block>
-        {!canSeePosts ? (
-          <Text>Posts</Text>
+      <Block paddingVertical={sizes.padding}>
+        {canSeePosts ? (
+          <FlatList
+            style={{marginBottom: sizes.padding * 3}}
+            data={posts}
+            renderItem={renderItem}
+            numColumns={2}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={(!posts || !posts.length) && {flex: 1}}
+            ListEmptyComponent={() => (
+              <EmptyList sad text="This user has not posted yet" />
+            )}
+          />
         ) : (
           <Block align="center" justify="center">
             <EmptyList sad text="This account is private" />

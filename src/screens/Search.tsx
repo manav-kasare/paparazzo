@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {Block, Input, UserTile} from '../components';
@@ -16,7 +15,6 @@ import {
   searchUsers,
   sendFriendRequest,
   unfollow,
-  updateDoc,
 } from '../services/api';
 import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
@@ -30,22 +28,10 @@ export default function Search() {
   const [_following, _setFollowing] = useState<any | null>(null);
   const [requests, setRequests] = useState<any | null>(null);
   const [searched, setSearched] = useState(false);
-  const navigation = useNavigation();
-
-  navigation.addListener('blur', () => {
-    // setQuery('');
-    // setUsers([]);
-    // setSearched(false);
-    setRequests(null);
-    _setFollowing(null);
-  });
-
-  navigation.addListener('focus', () => {
-    handleGetFollowing();
-    handleGetRequests();
-  });
 
   useEffect(() => {
+    handleGetFollowing();
+    handleGetRequests();
     if (!friends) {
       handleGetFriends();
     }
@@ -175,6 +161,7 @@ export default function Search() {
           ListEmptyComponent={() => (
             <EmptyList
               sad={searched}
+              search
               text={
                 searched
                   ? 'No results found for this username'
