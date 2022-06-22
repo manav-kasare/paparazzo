@@ -115,7 +115,7 @@ const Button = ({
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: buttonColor,
-      borderRadius: rounded ? sizes.s : sizes.buttonRadius,
+      borderRadius: rounded ? sizes.s : radius ? radius : sizes.buttonRadius,
       ...(shadow &&
         buttonColor !== 'transparent' && {
           shadowColor: colors.shadow,

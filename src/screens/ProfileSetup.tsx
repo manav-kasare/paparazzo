@@ -11,6 +11,7 @@ import {storeUser} from '../services/api';
 import imageUpload from '../services/imageUpload';
 import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function ProfileSetup() {
   const {sizes, colors, gradients, icons} = useTheme();
@@ -103,7 +104,7 @@ export default function ProfileSetup() {
                   radius={sizes.avatarSize}
                 />
               ) : (
-                <Image source={icons.image} height={20} width={20} radius={0} />
+                <Ionicons name="image" color={colors.text} size={sizes.m} />
               )}
             </Button>
 

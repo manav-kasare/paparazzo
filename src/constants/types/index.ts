@@ -119,3 +119,14 @@ export type ScreensStackParamList = {
   Requests: undefined;
   User: {userParam: any};
 };
+
+export type IPost = {
+  id: string;
+  userId: string;
+  image: string;
+  caption?: string;
+  postedBy: {
+    id: string;
+    username: string;
+  };
+};

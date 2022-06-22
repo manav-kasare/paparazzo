@@ -10,6 +10,7 @@ import Tile from './Tile';
 import UserTile from './UserTile';
 import SmallUserTile from './SmallUserTile';
 import Loading from './Loading';
+import PostTile from './PostTile';
 
 export {
   Block,
@@ -24,4 +25,5 @@ export {
   UserTile,
   SmallUserTile,
   Loading,
+  PostTile,
 };

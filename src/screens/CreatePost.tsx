@@ -48,6 +48,7 @@ export default function CreatePost() {
     }
     const payload = {
       ...(caption.length && {caption}),
+      id: postId,
       image: imageResponse.data,
       userId: id,
       postedBy: {

@@ -472,3 +472,16 @@ export const post = async (postId: string, payload: any) => {
     return {error, data: null};
   }
 };
+
+export const getPosts = async (userId: string) => {
+  try {
+    const docsData = await firestore()
+      .collection('posts')
+      .where('userId', '==', userId)
+      .get();
+    const data = docsData.docs.map(item => item.data());
+    return {data, error: null};
+  } catch (error) {
+    return {error, data: null};
+  }
+};

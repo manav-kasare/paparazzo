@@ -5,6 +5,7 @@ import {
   Followers,
   Following,
   Friends,
+  Post,
   Requests,
   Settings,
   User,

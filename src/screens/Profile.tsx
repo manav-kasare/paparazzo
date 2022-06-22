@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
-import {Block, Button, Image, Text} from '../components';
+import React, {useEffect, useState} from 'react';
+import {Block, Button, Image, PostTile, Text} from '../components';
 import {useData, useTheme} from '../hooks';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
-import {ActivityIndicator} from 'react-native';
+import {ActivityIndicator, FlatList} from 'react-native';
 import imageUpload from '../services/imageUpload';
 import {showToast} from '../services/toast';
-import {updateDoc} from '../services/api';
+import {getPosts, updateDoc} from '../services/api';
 import {storeJson} from '../services/store';
 import {navigate} from '../services/navigation';
+import {IPost} from '../constants/types';
 
 export default function Profile() {
   const {user, handleUser} = useData();
@@ -16,6 +17,17 @@ export default function Profile() {
   const [imageChanged, setImageChanged] = useState(false);
   const [avatar, setAvatar] = useState(user.avatar);
   const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    handleGetPosts();
+  }, []);
+
+  const handleGetPosts = async () => {
+    const response = await getPosts(user.id);
+    if (response.error) return showToast('error', 'Could not get posts');
+    setPosts(response.data ? response.data : []);
+  };
 
   const handleImage = () => {
     if (imageChanged) return handleUploadImage();
@@ -56,6 +68,21 @@ export default function Profile() {
     await storeJson('user', {...user, ...payload});
   };
 
+  const renderItem = ({item}: {item: IPost}) => (
+    <Block
+      marginHorizontal={sizes.width * 0.025 * 0.5}
+      marginVertical={sizes.width * 0.025 * 0.5}
+      width={sizes.width * 0.475}
+      height={sizes.width * 0.475}>
+      <Image
+        height={sizes.width * 0.475}
+        width={sizes.width * 0.475}
+        resizeMode="contain"
+        source={{uri: item.image}}
+      />
+    </Block>
+  );
+
   return (
     <Block>
       <Block
@@ -64,95 +91,105 @@ export default function Profile() {
           borderBottomLeftRadius: sizes.cardRadius,
           borderBottomRightRadius: sizes.cardRadius,
         }}
+        paddingHorizontal={sizes.padding}
+        paddingVertical={sizes.padding}
         flex={0}>
-        <Button
-          onPress={handleImage}
-          flex={0}
-          height={sizes.height * 0.13}
-          width={sizes.height * 0.13}
-          radius={(sizes.height * 0.13) / 2}
-          color={colors.gray}
-          style={{alignSelf: 'center'}}
-          marginVertical={sizes.padding}
-          align="center"
-          justify="center">
-          <Image
-            height={sizes.height * 0.125}
-            width={sizes.height * 0.125}
-            radius={(sizes.height * 0.125) / 2}
-            source={{uri: avatar}}
-          />
-          <Block
-            radius={sizes.m * 0.5}
-            height={sizes.m}
-            width={sizes.m}
-            color={colors.white}
-            position="absolute"
-            align="center"
-            justify="center"
-            bottom={0}
-            right={10}>
-            {loading ? (
-              <ActivityIndicator color={colors.background} size={14} />
-            ) : imageChanged ? (
-              <Ionicons
-                name="cloud-upload-outline"
-                color={colors.background}
-                size={15}
+        <Block flex={0} row>
+          <Block flex={0}>
+            <Button
+              flex={0}
+              onPress={handleImage}
+              height={sizes.avatarSize * 1.6}
+              width={sizes.avatarSize * 1.6}
+              radius={sizes.avatarRadius * 1.6}
+              color={colors.gray}
+              marginTop={-sizes.padding / 2}
+              style={{alignSelf: 'center'}}
+              align="center"
+              justify="center">
+              <Image
+                height={sizes.avatarSize * 1.5}
+                width={sizes.avatarSize * 1.5}
+                radius={sizes.avatarRadius * 1.5}
+                source={{uri: avatar}}
               />
-            ) : (
-              <Ionicons name="pencil" color={colors.background} size={15} />
-            )}
+              <Block
+                radius={sizes.m * 0.5}
+                height={sizes.m}
+                width={sizes.m}
+                color={colors.white}
+                position="absolute"
+                align="center"
+                justify="center"
+                bottom={0}
+                right={0}>
+                {loading ? (
+                  <ActivityIndicator color={colors.background} size={14} />
+                ) : imageChanged ? (
+                  <Ionicons
+                    name="cloud-upload-outline"
+                    color={colors.background}
+                    size={15}
+                  />
+                ) : (
+                  <Ionicons name="pencil" color={colors.background} size={15} />
+                )}
+              </Block>
+            </Button>
+
+            <Text
+              align="center"
+              bold
+              size={sizes.h5}
+              marginTop={sizes.padding}
+              lineHeight={sizes.h5}>
+              {user.username}
+            </Text>
           </Block>
-        </Button>
-
-        <Text align="center" bold size={sizes.h4} lineHeight={sizes.h4}>
-          {user.username}
-        </Text>
-
-        <Block
-          marginHorizontal={sizes.padding}
-          paddingBottom={sizes.m}
-          marginTop={sizes.s}
-          flex={0}
-          row>
-          <Button
-            flex={1}
-            onPress={() => navigate('Followers')}
-            align="center"
-            justify="center"
-            paddingVertical={sizes.m}>
-            <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-              {user.followers}
-            </Text>
-            <Text>Followers</Text>
-          </Button>
-          <Button
-            flex={1}
-            onPress={() => navigate('Following')}
-            align="center"
-            justify="center"
-            paddingVertical={sizes.m}>
-            <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-              {user.following}
-            </Text>
-            <Text>Following</Text>
-          </Button>
-          <Button
-            flex={1}
-            align="center"
-            justify="center"
-            onPress={() => navigate('Friends')}
-            paddingVertical={sizes.m}>
-            <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-              {user.friends}
-            </Text>
-            <Text>Friends</Text>
-          </Button>
+          <Block marginHorizontal={sizes.padding} paddingBottom={sizes.m} row>
+            <Block
+              flex={1}
+              align="center"
+              justify="center"
+              paddingVertical={sizes.m}>
+              <Text size={sizes.h4} bold lineHeight={sizes.h4}>
+                {user.followers}
+              </Text>
+              <Text>Followers</Text>
+            </Block>
+            <Block
+              flex={1}
+              align="center"
+              justify="center"
+              paddingVertical={sizes.m}>
+              <Text size={sizes.h4} bold lineHeight={sizes.h4}>
+                {user.following}
+              </Text>
+              <Text>Following</Text>
+            </Block>
+            <Block
+              flex={1}
+              align="center"
+              justify="center"
+              paddingVertical={sizes.m}>
+              <Text size={sizes.h4} bold lineHeight={sizes.h4}>
+                {user.friends}
+              </Text>
+              <Text>Friends</Text>
+            </Block>
+          </Block>
         </Block>
       </Block>
 
-      <Block></Block>
+      <Block paddingVertical={sizes.padding}>
+        <FlatList
+          style={{marginBottom: sizes.padding * 3}}
+          data={posts}
+          renderItem={renderItem}
+          numColumns={2}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </Block>
     </Block>
   );
 }
