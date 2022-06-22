@@ -11,6 +11,7 @@ import {storeJson} from '../services/store';
 import {navigate} from '../services/navigation';
 import {IPost} from '../constants/types';
 import Post from '../components/Post';
+import EmptyList from '../components/EmptyList';
 
 export default function Profile() {
   const {user, handleUser} = useData();
@@ -196,6 +197,10 @@ export default function Profile() {
           renderItem={renderItem}
           numColumns={2}
           keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={(!posts || !posts.length) && {flex: 1}}
+          ListEmptyComponent={() => (
+            <EmptyList sad text="You dont have any posts yet" />
+          )}
         />
       </Block>
     </Block>

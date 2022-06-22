@@ -79,6 +79,7 @@ function UserTile({
             friends,
           },
           isFriend,
+          isFollowing,
         })
       }
       flex={0}

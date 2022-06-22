@@ -1,9 +1,9 @@
 import React from 'react';
-import Block from './Block';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../hooks';
-import Text from './Text';
+import Block from './Block';
 import Button from './Button';
+import Image from './Image';
+import Text from './Text';
 
 interface Props {
   text: string;
@@ -17,10 +17,10 @@ function EmptyList({text, sad, action, actionText}: Props) {
   return (
     <Block flex={1} align="center" justify="center">
       {sad && (
-        <MaterialCommunityIcons
-          name="emoticon-sad-outline"
-          color={colors.gray}
-          size={sizes.xl}
+        <Image
+          source={require('../assets/images/dawn.png')}
+          height={200}
+          width={200}
         />
       )}
       <Text color={colors.gray} marginTop={sizes.padding}>

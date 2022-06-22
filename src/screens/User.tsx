@@ -1,15 +1,18 @@
 import {useRoute} from '@react-navigation/native';
 import React from 'react';
 import {Block, Button, Image, Text} from '../components';
+import EmptyList from '../components/EmptyList';
 import {useTheme} from '../hooks';
 import {navigate} from '../services/navigation';
 
 export default function User() {
   const {sizes, colors} = useTheme();
   const route = useRoute();
-  const {userParam, isFriend}: any = route.params;
+  const {userParam, isFriend, isFollowing}: any = route.params;
   const {id, username, avatar, isPrivate, followers, following, friends} =
     userParam;
+
+  const canSeePosts = isFollowing || !isPrivate;
 
   const handlePost = () => {
     navigate('CreatePost', {
@@ -107,7 +110,15 @@ export default function User() {
         </Block>
       </Block>
 
-      <Block></Block>
+      <Block>
+        {!canSeePosts ? (
+          <Text>Posts</Text>
+        ) : (
+          <Block align="center" justify="center">
+            <EmptyList sad text="This account is private" />
+          </Block>
+        )}
+      </Block>
     </Block>
   );
 }
