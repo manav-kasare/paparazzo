@@ -10,6 +10,7 @@ import {getPosts, updateDoc} from '../services/api';
 import {storeJson} from '../services/store';
 import {navigate} from '../services/navigation';
 import {IPost} from '../constants/types';
+import Post from '../components/Post';
 
 export default function Profile() {
   const {user, handleUser} = useData();
@@ -18,6 +19,7 @@ export default function Profile() {
   const [avatar, setAvatar] = useState(user.avatar);
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
+  const [type, setType] = useState('collage');
 
   useEffect(() => {
     handleGetPosts();
@@ -68,29 +70,35 @@ export default function Profile() {
     await storeJson('user', {...user, ...payload});
   };
 
+  const onPress = (item: IPost) => {
+    navigate('Posts', {posts, item});
+  };
+
   const renderItem = ({item}: {item: IPost}) => (
-    <Block
+    <Button
+      onPress={() => onPress(item)}
       marginHorizontal={sizes.width * 0.025 * 0.5}
       marginVertical={sizes.width * 0.025 * 0.5}
       width={sizes.width * 0.475}
       height={sizes.width * 0.475}>
       <Image
+        radius={0}
         height={sizes.width * 0.475}
         width={sizes.width * 0.475}
         resizeMode="contain"
         source={{uri: item.image}}
       />
-    </Block>
+    </Button>
   );
 
   return (
     <Block>
       <Block
         color={colors.card}
-        style={{
-          borderBottomLeftRadius: sizes.cardRadius,
-          borderBottomRightRadius: sizes.cardRadius,
-        }}
+        // style={{
+        //   borderBottomLeftRadius: sizes.cardRadius,
+        //   borderBottomRightRadius: sizes.cardRadius,
+        // }}
         paddingHorizontal={sizes.padding}
         paddingVertical={sizes.padding}
         flex={0}>
@@ -181,7 +189,7 @@ export default function Profile() {
         </Block>
       </Block>
 
-      <Block paddingVertical={sizes.padding}>
+      <Block>
         <FlatList
           style={{marginBottom: sizes.padding * 3}}
           data={posts}

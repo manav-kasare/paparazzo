@@ -122,7 +122,11 @@ export type ScreensStackParamList = {
 
 export type IPost = {
   id: string;
-  userId: string;
+  user: {
+    id: string;
+    username: string;
+    avatar: string;
+  };
   image: string;
   caption?: string;
   postedBy: {

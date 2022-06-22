@@ -10,6 +10,7 @@ import getRandomId from '../services/getRandomId';
 import {post} from '../services/api';
 import {ActivityIndicator} from 'react-native';
 import {goBack} from '../services/navigation';
+import {IPost} from '../constants/types';
 
 export default function CreatePost() {
   const [image, setImage] = useState<string | undefined>(undefined);
@@ -50,13 +51,18 @@ export default function CreatePost() {
       ...(caption.length && {caption}),
       id: postId,
       image: imageResponse.data,
-      userId: id,
+      user: {
+        id,
+        username: remoteUser.username,
+        avatar: remoteUser.avatar,
+      },
       postedBy: {
         id: user.id,
         username: user.username,
       },
-    };
+    } as IPost;
     const response = await post(postId, payload);
+    console.log('response', response);
     setLoading(false);
     if (response.error)
       return showToast('error', 'Something went wrong while posting!');

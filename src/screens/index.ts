@@ -10,4 +10,4 @@ export {default as Friends} from './Friends';
 export {default as Requests} from './Requests';
 export {default as User} from './User';
 export {default as CreatePost} from './CreatePost';
-export {default as Post} from './Post';
+export {default as Posts} from './Posts';

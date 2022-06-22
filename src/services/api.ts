@@ -477,7 +477,7 @@ export const getPosts = async (userId: string) => {
   try {
     const docsData = await firestore()
       .collection('posts')
-      .where('userId', '==', userId)
+      .where('user.id', '==', userId)
       .get();
     const data = docsData.docs.map(item => item.data());
     return {data, error: null};

@@ -15,6 +15,8 @@ export default function User() {
     navigate('CreatePost', {
       remoteUser: {
         id,
+        username,
+        avatar,
       },
     });
   };
