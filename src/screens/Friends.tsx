@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
-import {Block, Loading, SmallUserTile, Tile} from '../components';
+import {Block, Loading, SmallUserTile, Text, Tile} from '../components';
 import EmptyList from '../components/EmptyList';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
-import {getFriends, removeFriend} from '../services/api';
+import {getFriends, getRequestsWithId, removeFriend} from '../services/api';
 import {navigate} from '../services/navigation';
 import {storeJson} from '../services/store';
 
 export default function Friends() {
-  const {sizes} = useTheme();
-  const {friends, setFriends, user, handleUser} = useData();
+  const {sizes, colors} = useTheme();
+  const {requests, setRequests, friends, setFriends, user, handleUser} =
+    useData();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -18,11 +19,19 @@ export default function Friends() {
       setLoading(true);
       handleGetFriends();
     }
+    if (!requests) {
+      handleGetRequests();
+    }
   }, []);
+
+  const handleGetRequests = async () => {
+    const response = await getRequestsWithId(user.id);
+    if (response.error) return;
+    setRequests(response.data);
+  };
 
   const handleGetFriends = async () => {
     const response = await getFriends(user.id);
-    console.log('friends', response);
     if (response.error) return;
     setFriends(response.data?.users);
     setLoading(false);
@@ -42,6 +51,7 @@ export default function Friends() {
     <SmallUserTile
       type="friends"
       {...item}
+      isPrivate={item.private}
       handleRemoveFriend={handleRemoveFriend}
     />
   );
@@ -54,7 +64,24 @@ export default function Friends() {
 
   return (
     <Block paddingVertical={sizes.padding}>
-      <Tile text="Friends Requests" onPress={() => navigate('Requests')} />
+      <Tile
+        text="Friends Requests"
+        onPress={() => navigate('Requests')}
+        right={
+          <Block
+            flex={0}
+            radius={sizes.md / 2}
+            height={sizes.md}
+            width={sizes.md}
+            align="center"
+            justify="center"
+            color={colors.primary}>
+            <Text color={colors.background}>
+              {requests ? Object.keys(requests).length : 0}
+            </Text>
+          </Block>
+        }
+      />
       {loading ? (
         <Loading />
       ) : (

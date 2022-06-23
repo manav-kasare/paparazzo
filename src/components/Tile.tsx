@@ -6,7 +6,7 @@ import {useTheme} from '../hooks';
 import Button from './Button';
 import Text from './Text';
 
-function Tile({text, danger, _switch, onPress, switchActive}: ITile) {
+function Tile({text, danger, _switch, onPress, switchActive, right}: ITile) {
   const {sizes, colors} = useTheme();
   return (
     <Button
@@ -24,7 +24,9 @@ function Tile({text, danger, _switch, onPress, switchActive}: ITile) {
       <Text size={sizes.h5} lineHeight={sizes.h5} danger={danger}>
         {text}
       </Text>
-      {_switch ? (
+      {right ? (
+        right
+      ) : _switch ? (
         <Switch
           thumbColor={colors.primary}
           ios_backgroundColor={colors.primary}

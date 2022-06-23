@@ -1,5 +1,6 @@
 import React from 'react';
-import {useTheme} from '../hooks';
+import {useData, useTheme} from '../hooks';
+import {navigate} from '../services/navigation';
 import Block from './Block';
 import Button from './Button';
 import Image from './Image';
@@ -51,8 +52,22 @@ function SmallUserTile({
     handleReject && handleReject(remoteUser, requestId);
   };
 
+  const handleTilePress = () => {
+    const remoteUser = {
+      id,
+      username,
+      avatar,
+    };
+    navigate('User', {
+      userParam: remoteUser,
+      isFriend: type === 'friends',
+      halfUser: true,
+    });
+  };
+
   return (
-    <Block
+    <Button
+      onPress={handleTilePress}
       marginVertical={sizes.padding / 2}
       flex={0}
       style={{alignSelf: 'center'}}
@@ -135,7 +150,7 @@ function SmallUserTile({
           )}
         </Block>
       </Block>
-    </Block>
+    </Button>
   );
 }
 

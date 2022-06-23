@@ -8,30 +8,27 @@ import Text from './Text';
 interface Props {
   text: string;
   sad?: boolean;
-  search?: boolean;
+  type?: string;
   action?: () => void;
   actionText?: string;
 }
 
-function EmptyList({text, sad, search, action, actionText}: Props) {
+function EmptyList({text, sad, type, action, actionText}: Props) {
   const {colors, sizes} = useTheme();
+  const source =
+    type === 'search'
+      ? require('../assets/images/search.png')
+      : type === 'private'
+      ? require('../assets/images/private.png')
+      : require('../assets/images/dawn.png');
+
   return (
     <Block
       flex={1}
       marginBottom={sizes.padding * 4}
       align="center"
       justify="center">
-      {(sad || search) && (
-        <Image
-          source={
-            search
-              ? require('../assets/images/search.png')
-              : require('../assets/images/dawn.png')
-          }
-          height={200}
-          width={200}
-        />
-      )}
+      {(sad || type) && <Image source={source} height={200} width={200} />}
       <Text color={colors.gray} marginTop={sizes.padding}>
         {text}
       </Text>

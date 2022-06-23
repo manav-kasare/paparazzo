@@ -890,4 +890,5 @@ export interface ITile {
   _switch?: boolean;
   switchActive?: boolean;
   onPress?: () => void;
+  right?: any;
 }

@@ -1,31 +1,50 @@
 import {useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
-import {Block, Button, Image, Text} from '../components';
+import {Block, Button, Image, Loading, Text} from '../components';
 import EmptyList from '../components/EmptyList';
 import {IPost} from '../constants/types';
 import {useTheme} from '../hooks';
-import {getPosts} from '../services/api';
+import {getDoc, getPosts, storeUser} from '../services/api';
 import {navigate} from '../services/navigation';
 import {showToast} from '../services/toast';
 
 export default function User() {
   const {sizes, colors} = useTheme();
   const route = useRoute();
-  const {userParam, isFriend, isFollowing}: any = route.params;
+  const {userParam, isFriend, isFollowing, halfUser}: any = route.params;
   const {id, username, avatar, isPrivate, followers, following, friends} =
     userParam;
 
   const canSeePosts = isFollowing || isFriend || !isPrivate;
 
   const [posts, setPosts] = useState<IPost[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [_user, _setUser] = useState({
+    id,
+    username,
+    avatar,
+    isPrivate,
+    followers,
+    following,
+    friends,
+  });
 
   useEffect(() => {
     if (canSeePosts) handleGetPosts();
+    if (halfUser) handleGetUser();
   }, []);
 
+  const handleGetUser = async () => {
+    const response = await getDoc('users', id);
+    if (response.error) return;
+    _setUser(prev => ({...prev, ...response.data}));
+  };
+
   const handleGetPosts = async () => {
+    setLoading(true);
     const response = await getPosts(id);
+    setLoading(false);
     if (response.error) return showToast('error', 'Could not get posts');
     setPosts(response.data ? response.data : []);
   };
@@ -101,7 +120,7 @@ export default function User() {
               justify="center"
               paddingVertical={sizes.m}>
               <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-                {followers}
+                {_user.followers}
               </Text>
               <Text>Followers</Text>
             </Block>
@@ -111,7 +130,7 @@ export default function User() {
               justify="center"
               paddingVertical={sizes.m}>
               <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-                {following}
+                {_user.following}
               </Text>
               <Text>Following</Text>
             </Block>
@@ -121,7 +140,7 @@ export default function User() {
               justify="center"
               paddingVertical={sizes.m}>
               <Text size={sizes.h4} bold lineHeight={sizes.h4}>
-                {friends}
+                {_user.friends}
               </Text>
               <Text>Friends</Text>
             </Block>
@@ -144,20 +163,24 @@ export default function User() {
 
       <Block paddingVertical={sizes.padding}>
         {canSeePosts ? (
-          <FlatList
-            style={{marginBottom: sizes.padding * 3}}
-            data={posts}
-            renderItem={renderItem}
-            numColumns={2}
-            keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={(!posts || !posts.length) && {flex: 1}}
-            ListEmptyComponent={() => (
-              <EmptyList sad text="This user has not posted yet" />
-            )}
-          />
+          loading ? (
+            <Loading />
+          ) : (
+            <FlatList
+              style={{marginBottom: sizes.padding * 3}}
+              data={posts}
+              renderItem={renderItem}
+              numColumns={2}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={(!posts || !posts.length) && {flex: 1}}
+              ListEmptyComponent={() => (
+                <EmptyList sad text="This user has not posted yet" />
+              )}
+            />
+          )
         ) : (
           <Block align="center" justify="center">
-            <EmptyList sad text="This account is private" />
+            <EmptyList type="private" text="This account is private" />
           </Block>
         )}
       </Block>

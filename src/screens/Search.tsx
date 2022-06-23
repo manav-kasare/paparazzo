@@ -161,7 +161,7 @@ export default function Search() {
           ListEmptyComponent={() => (
             <EmptyList
               sad={searched}
-              search
+              type="search"
               text={
                 searched
                   ? 'No results found for this username'
