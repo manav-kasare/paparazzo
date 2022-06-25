@@ -109,6 +109,7 @@ export interface INotification {
 export type AuthStackParamList = {
   Onboard: undefined;
   ProfileSetup: {email: string};
+  Verification: {code: string; email: string; password: string};
 };
 
 export type ScreensStackParamList = {
@@ -133,4 +134,8 @@ export type IPost = {
     id: string;
     username: string;
   };
+};
+
+export type IConfig = {
+  API_URL: string;
 };

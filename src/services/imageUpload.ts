@@ -1,15 +1,23 @@
-import storage from '@react-native-firebase/storage';
+import {RNS3} from 'react-native-aws3';
 
-export default async (id: string, path: string, type?: string) => {
+const options = {
+  keyPrefix: 'avatars/',
+  bucket: 'paparazzo',
+  region: 'ap-south-1',
+  accessKey: 'AKIAQITR7QMTRZ5RWN23',
+  secretKey: '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',
+  successActionStatus: 201,
+};
+
+export default async (name: string, path: string, type?: string) => {
   try {
-    const reference = storage().ref(
-      type && type === 'post'
-        ? 'posts/' + id + '.' + path.split('.').slice(-1)[0]
-        : 'avatars/' + id + '.' + path.split('.').slice(-1)[0],
-    );
-    await reference.putFile(path);
-    const url = await reference.getDownloadURL();
-    return {data: url, error: null};
+    const file = {
+      uri: path,
+      name: name,
+      type: 'image/' + path.split('.').slice(-1)[0],
+    };
+    const response: any = await RNS3.put(file, options);
+    return {data: response.body.postResponse.location, error: null};
   } catch (error) {
     return {error, data: null};
   }

@@ -4,7 +4,7 @@ import {ActivityIndicator} from 'react-native';
 import * as Yup from 'yup';
 import {Block, Button, Input, Seperator, Text} from '../components';
 import {useData, useTheme} from '../hooks';
-import {authenticate, getDoc} from '../services/api';
+import {users} from '../services/api';
 import {navigate} from '../services/navigation';
 import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
@@ -31,29 +31,27 @@ export default function Onboard() {
 
   const onSubmit = async (values: FormikValues) => {
     setLoading(true);
-    const response = await authenticate(values.email, values.password);
+    const payload = {
+      email: values.email,
+      password: values.password,
+    };
+    const response = await users.authenticate(payload);
+    console.log('response', response);
     if (response.error) {
       setLoading(false);
       return showToast('error', response.error);
     }
-
-    if (response.data?.additionalUserInfo?.isNewUser) {
+    if (!response.data.loggedIn) {
       setLoading(false);
-      return navigate('ProfileSetup', {
+      return navigate('Verification', {
+        code: response.data.code,
         email: values.email,
-        userId: response.data.user.uid,
+        password: values.password,
       });
     }
-    const userResponse = await getDoc('users', response.data?.user.uid);
-    if (userResponse.error) {
-      setLoading(false);
-      return showToast('error', response.error);
-    }
+    handleUser(response.data.user);
     setLoading(false);
-    if (userResponse.data) {
-      handleUser(userResponse.data);
-      storeJson('user', userResponse.data);
-    }
+    storeJson('user', response.data.user);
   };
 
   return (

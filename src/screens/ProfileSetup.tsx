@@ -7,11 +7,12 @@ import * as Yup from 'yup';
 import {Block, Button, Image, Input, Text} from '../components';
 import {username} from '../constants/regex';
 import {useData, useTheme} from '../hooks';
-import {storeUser} from '../services/api';
 import imageUpload from '../services/imageUpload';
 import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {users} from '../services/api';
+import {getToken} from '../services/fcm';
 
 export default function ProfileSetup() {
   const {sizes, colors, gradients, icons} = useTheme();
@@ -19,7 +20,7 @@ export default function ProfileSetup() {
   const [loading, setLoading] = useState(false);
   const route = useRoute<any>();
 
-  const {email, userId} = route.params;
+  const {email, password} = route.params;
 
   const initialValues = {
     username: '',
@@ -49,21 +50,24 @@ export default function ProfileSetup() {
 
   const onSubmit = async (values: any) => {
     setLoading(true);
-    const imageResponse = await imageUpload(userId, values.avatar);
-    console.log('imageResponse', imageResponse);
+    const imageResponse = await imageUpload(email, values.avatar);
     if (imageResponse.error) {
       setLoading(false);
       return showToast('error', 'Could not upload image!');
     }
+    const fcm = await getToken();
     const payload = {
-      username: values.username,
       email,
+      password,
+      fcm,
+      username: values.username,
       avatar: imageResponse.data,
       followers: 0,
       following: 0,
       friends: 0,
+      isPrivate: true,
     };
-    const response = await storeUser(userId, payload);
+    const response = await users.signup(payload);
     console.log('response', response);
     if (response.error) {
       setLoading(false);
