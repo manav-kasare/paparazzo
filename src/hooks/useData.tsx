@@ -7,6 +7,7 @@ export const DataContext = React.createContext({});
 export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [theme, setTheme] = useState<ITheme>(dark);
   const [user, setUser] = useState<IUser | null>(null);
+  const [token, setToken] = useState<String | null>(null);
   const [following, setFollowing] = useState<Array<any> | null>(null);
   const [followers, setFollowers] = useState<Array<any> | null>(null);
   const [friends, setFriends] = useState<Array<any> | null>(null);
@@ -26,6 +27,8 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const contextValue = {
     theme,
     setTheme,
+    token,
+    setToken,
     user,
     handleUser,
     following,

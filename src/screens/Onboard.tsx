@@ -4,14 +4,14 @@ import {ActivityIndicator} from 'react-native';
 import * as Yup from 'yup';
 import {Block, Button, Input, Seperator, Text} from '../components';
 import {useData, useTheme} from '../hooks';
-import {users} from '../services/api';
+import {setHeader, users} from '../services/api';
 import {navigate} from '../services/navigation';
-import {storeJson} from '../services/store';
+import {storeJson, storeString} from '../services/store';
 import {showToast} from '../services/toast';
 
 export default function Onboard() {
   const {colors, sizes, gradients, fonts} = useTheme();
-  const {handleUser} = useData();
+  const {handleUser, setToken} = useData();
 
   const [loading, setLoading] = useState(false);
 
@@ -49,8 +49,11 @@ export default function Onboard() {
         password: values.password,
       });
     }
+    setToken(response.data.token);
     handleUser(response.data.user);
     setLoading(false);
+    setHeader(response.data.token);
+    storeString('token', response.data.token);
     storeJson('user', response.data.user);
   };
 

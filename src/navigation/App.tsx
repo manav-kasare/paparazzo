@@ -1,37 +1,35 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
-import {IUser} from '../constants/types';
 import {ThemeProvider, useData} from '../hooks';
-import {getDoc} from '../services/api';
+import {setHeader, users} from '../services/api';
 import {navigationRef} from '../services/navigation';
-import {getJson} from '../services/store';
+import {getJson, getString} from '../services/store';
 import Auth from './Auth';
 import Screens from './Screens';
-import Tabs from './Tabs';
 
 export default function () {
-  const {theme, setTheme, user, handleUser} = useData();
+  const {theme, setTheme, token, user, handleUser} = useData();
 
   useEffect(() => {
     // Platform.OS === 'android' && StatusBar.setTranslucent(true);
     StatusBar.setBackgroundColor('transparent');
     StatusBar.setTranslucent(true);
     StatusBar.setBarStyle('light-content');
-    checkUser();
+    checkToken();
     return () => {
       StatusBar.setBarStyle('default');
     };
   }, []);
 
-  const checkUser = async () => {
-    const _user = await getJson('user');
-    if (_user && __DEV__) {
-      const fbUser = await getDoc('users', _user.id);
-      handleUser(fbUser.data);
-    } else {
-      handleUser(_user);
-    }
+  const checkToken = async () => {
+    const _token = await getString('token');
+    if (!_token) return;
+    setHeader(_token);
+    const storedUser = await getJson('user');
+    handleUser(storedUser);
+    const _user = await users.me();
+    console.log('_user', _user);
   };
 
   const navigationTheme = {
@@ -51,7 +49,7 @@ export default function () {
   return (
     <ThemeProvider theme={theme} setTheme={setTheme}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
-        {user ? <Screens /> : <Auth />}
+        {token && user ? <Screens /> : <Auth />}
       </NavigationContainer>
     </ThemeProvider>
   );

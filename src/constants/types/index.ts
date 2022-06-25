@@ -62,6 +62,8 @@ export interface ILocation {
 export interface IUseData {
   theme: ITheme;
   setTheme: (theme?: ITheme) => void;
+  token: String;
+  setToken: (token?: string) => void;
   user: IUser;
   handleUser: (data?: IUser | any) => void;
   notifications: INotification[];

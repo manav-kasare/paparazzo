@@ -1,14 +1,14 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import axios from 'axios';
-import {IPost, IUser} from '../constants/types';
+import axios, {AxiosError} from 'axios';
 import {API_URL} from './config';
-import {getToken} from './fcm';
 
-export const instance = axios.create({
+const instance = axios.create({
   baseURL: API_URL,
   timeout: 1000,
 });
+
+export const setHeader = (token: string) => {
+  instance.defaults.headers.post['Authorization'] = 'Bearer ' + token;
+};
 
 const get = async (endpoint: string) => {
   try {
@@ -20,19 +20,21 @@ const get = async (endpoint: string) => {
   }
 };
 
-const post = async (endpoint: string, payload: Object) => {
+const post = async (endpoint: string, payload?: Object) => {
   try {
     const response = await instance.post(endpoint, payload);
     const data: {data: any; error: any} = await response.data;
     return data;
-  } catch (error) {
-    console.log('post error', error);
+  } catch (error: AxiosError | any) {
+    console.log('post error', error.response);
     return {data: null, error: 'An unexpected error occured!'};
   }
 };
 
 export const users = {
-  authenticate: async (payload: Object) =>
-    await post('/users/authenticate', payload),
+  me: async () => await get('/users/me'),
+  get: async (id: string) => await get('/users/' + id),
   signup: async (payload: Object) => await post('/users/signup', payload),
+  signout: async () => await post('/users/signout'),
+  authenticate: async (data: Object) => await post('/users/authenticate', data),
 };

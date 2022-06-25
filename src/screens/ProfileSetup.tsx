@@ -8,7 +8,7 @@ import {Block, Button, Image, Input, Text} from '../components';
 import {username} from '../constants/regex';
 import {useData, useTheme} from '../hooks';
 import imageUpload from '../services/imageUpload';
-import {storeJson} from '../services/store';
+import {storeJson, storeString} from '../services/store';
 import {showToast} from '../services/toast';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {users} from '../services/api';
@@ -16,7 +16,7 @@ import {getToken} from '../services/fcm';
 
 export default function ProfileSetup() {
   const {sizes, colors, gradients, icons} = useTheme();
-  const {handleUser} = useData();
+  const {handleUser, setToken} = useData();
   const [loading, setLoading] = useState(false);
   const route = useRoute<any>();
 
@@ -74,8 +74,10 @@ export default function ProfileSetup() {
       return showToast('error', 'Could not sign up!');
     }
     setLoading(false);
-    handleUser(response.data);
-    storeJson('user', response.data);
+    handleUser(response.data.user);
+    setToken(response.data.token);
+    storeJson('user', response.data.user);
+    storeString('token', response.data.token);
     return showToast('success', 'Registered successfully!');
   };
 
@@ -92,23 +94,23 @@ export default function ProfileSetup() {
           <Block keyboard marginVertical={sizes.md}>
             <Button
               gradient={gradients.primary}
-              height={sizes.avatarSize * 2}
-              width={sizes.avatarSize * 2}
+              height={sizes.avatarSize * 4}
+              width={sizes.avatarSize * 4}
+              radius={sizes.avatarSize * 2}
               align="center"
               justify="center"
               onPress={() => handleImage(setFieldValue)}
-              style={{alignSelf: 'center'}}
-              radius={sizes.avatarSize}>
+              style={{alignSelf: 'center'}}>
               {values.avatar ? (
                 <Image
                   source={{uri: values.avatar}}
-                  height={sizes.avatarSize * 2}
-                  width={sizes.avatarSize * 2}
+                  height={sizes.avatarSize * 4}
+                  width={sizes.avatarSize * 4}
+                  radius={sizes.avatarSize * 2}
                   style={{alignSelf: 'center'}}
-                  radius={sizes.avatarSize}
                 />
               ) : (
-                <Ionicons name="image" color={colors.text} size={sizes.m} />
+                <Ionicons name="image" color={colors.text} size={sizes.md} />
               )}
             </Button>
 

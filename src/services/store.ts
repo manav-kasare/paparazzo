@@ -14,6 +14,14 @@ export const getJson = async (key: string) => {
   return null;
 };
 
+export const storeString = async (key: string, data: string) => {
+  await AsyncStorage.setItem(key, data);
+};
+
+export const getString = async (key: string) => {
+  return await AsyncStorage.getItem(key);
+};
+
 export const removeItem = async (key: string) => {
   await AsyncStorage.removeItem(key);
   return null;
