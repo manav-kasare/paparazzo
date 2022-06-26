@@ -12,7 +12,14 @@ export interface IUser {
   followers: number;
   following: number;
   friends: number;
-  private?: boolean;
+  isPrivate: boolean;
+}
+
+export interface IRelation {
+  isFollowing: boolean;
+  isFriend: boolean;
+  followRequested: boolean;
+  friendRequested: boolean;
 }
 
 export interface ICategory {

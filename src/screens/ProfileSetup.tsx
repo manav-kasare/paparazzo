@@ -53,7 +53,7 @@ export default function ProfileSetup() {
     const imageResponse = await imageUpload(email, values.avatar);
     if (imageResponse.error) {
       setLoading(false);
-      return showToast('error', 'Could not upload image!');
+      return showToast('error', 'Could not upload image. Please Try again');
     }
     const fcm = await getToken();
     const payload = {
@@ -71,7 +71,7 @@ export default function ProfileSetup() {
     console.log('response', response);
     if (response.error) {
       setLoading(false);
-      return showToast('error', 'Could not sign up!');
+      return showToast('error', response.error);
     }
     setLoading(false);
     handleUser(response.data.user);

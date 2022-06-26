@@ -9,10 +9,9 @@ import Auth from './Auth';
 import Screens from './Screens';
 
 export default function () {
-  const {theme, setTheme, token, user, handleUser} = useData();
+  const {theme, setTheme, token, setToken, user, handleUser} = useData();
 
   useEffect(() => {
-    // Platform.OS === 'android' && StatusBar.setTranslucent(true);
     StatusBar.setBackgroundColor('transparent');
     StatusBar.setTranslucent(true);
     StatusBar.setBarStyle('light-content');
@@ -27,9 +26,10 @@ export default function () {
     if (!_token) return;
     setHeader(_token);
     const storedUser = await getJson('user');
+    setToken(_token);
     handleUser(storedUser);
-    const _user = await users.me();
-    console.log('_user', _user);
+    const response = await users.me();
+    handleUser(response.data);
   };
 
   const navigationTheme = {

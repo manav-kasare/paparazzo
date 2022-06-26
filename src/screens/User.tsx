@@ -4,19 +4,17 @@ import {FlatList} from 'react-native';
 import {Block, Button, Image, Loading, Text} from '../components';
 import EmptyList from '../components/EmptyList';
 import {IPost} from '../constants/types';
-import {useTheme} from '../hooks';
-import {getDoc, getPosts, storeUser} from '../services/api';
+import {useData, useTheme} from '../hooks';
+import {follows, users} from '../services/api';
 import {navigate} from '../services/navigation';
 import {showToast} from '../services/toast';
 
 export default function User() {
-  const {sizes, colors} = useTheme();
   const route = useRoute();
-  const {userParam, isFriend, isFollowing, halfUser}: any = route.params;
-  const {id, username, avatar, isPrivate, followers, following, friends} =
-    userParam;
-
-  const canSeePosts = isFollowing || isFriend || !isPrivate;
+  const {sizes, colors} = useTheme();
+  const {user, handleUser, followers, setFollowers} = useData();
+  const {userParam}: any = route.params;
+  const {id, username, avatar} = userParam;
 
   const [posts, setPosts] = useState<IPost[]>([]);
   const [loading, setLoading] = useState(false);
@@ -24,30 +22,41 @@ export default function User() {
     id,
     username,
     avatar,
-    isPrivate,
-    followers,
-    following,
-    friends,
+    isPrivate: true,
+    followers: 0,
+    friends: 0,
+    following: 0,
   });
+  const [relations, setRelations] = useState({
+    isFollowing: false,
+    isFriend: false,
+    followRequested: false,
+    friendRequested: false,
+  });
+  const [canSeePosts, setCanSeePosts] = useState(false);
 
   useEffect(() => {
-    if (canSeePosts) handleGetPosts();
-    if (halfUser) handleGetUser();
+    handleGetRelations();
+    handleGetUser();
   }, []);
 
-  const handleGetUser = async () => {
-    const response = await getDoc('users', id);
+  const handleGetRelations = async () => {
+    const response = await users.relations(id);
     if (response.error) return;
-    _setUser(prev => ({...prev, ...response.data}));
+    setRelations({...relations, ...response.data});
   };
 
-  const handleGetPosts = async () => {
-    setLoading(true);
-    const response = await getPosts(id);
-    setLoading(false);
-    if (response.error) return showToast('error', 'Could not get posts');
-    setPosts(response.data ? response.data : []);
+  const handleGetUser = async () => {
+    const response = await users.get(id);
+    if (response.error) return;
+    _setUser(prev => ({...prev, ...response.data}));
+    const _canSeePosts =
+      relations.isFollowing || relations.isFriend || !response.data.isPrivate;
+    setCanSeePosts(_canSeePosts);
+    if (_canSeePosts) return handleGetPosts();
   };
+
+  const handleGetPosts = async () => {};
 
   const handlePost = () => {
     navigate('CreatePost', {
@@ -147,10 +156,41 @@ export default function User() {
           </Block>
         </Block>
 
-        <Block marginVertical={sizes.padding} row flex={0}>
-          {isFriend && (
+        <Block flex={0} marginVertical={sizes.padding}>
+          <Block marginBottom={sizes.padding} flex={0} row>
             <Button
               flex={1}
+              onPress={handlePost}
+              color={colors.background}
+              marginLeft={sizes.padding / 2}
+              paddingHorizontal={sizes.padding}>
+              <Text>
+                {relations.isFollowing
+                  ? 'Unfollow'
+                  : relations.followRequested
+                  ? 'Follow Requested'
+                  : _user.isPrivate
+                  ? 'Follow Request'
+                  : 'Follow'}
+              </Text>
+            </Button>
+            <Button
+              flex={1}
+              onPress={handlePost}
+              color={colors.background}
+              marginLeft={sizes.padding / 2}
+              paddingHorizontal={sizes.padding}>
+              <Text>
+                {relations.isFriend
+                  ? 'Friends'
+                  : relations.followRequested
+                  ? 'Freind Requested'
+                  : 'Freind Request'}
+              </Text>
+            </Button>
+          </Block>
+          {!relations.isFriend && (
+            <Button
               onPress={handlePost}
               color={colors.background}
               marginLeft={sizes.padding / 2}

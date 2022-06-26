@@ -5,17 +5,18 @@ import EmptyList from '../components/EmptyList';
 import {username} from '../constants/regex';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
-import {
-  follow,
-  getFollowing,
-  getFriends,
-  getRequests,
-  removeFriend,
-  removeRequest,
-  searchUsers,
-  sendFriendRequest,
-  unfollow,
-} from '../services/api';
+import {users} from '../services/api';
+// import {
+//   follow,
+//   getFollowing,
+//   getFriends,
+//   getRequests,
+//   removeFriend,
+//   removeRequest,
+//   searchUsers,
+//   sendFriendRequest,
+//   unfollow,
+// } from '../services/api';
 import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
 
@@ -24,113 +25,100 @@ export default function Search() {
     useData();
   const {colors, sizes} = useTheme();
   const [query, setQuery] = useState('');
-  const [users, setUsers] = useState<Array<any>>([]);
+  const [data, setData] = useState<Array<any>>([]);
   const [_following, _setFollowing] = useState<any | null>(null);
   const [requests, setRequests] = useState<any | null>(null);
   const [searched, setSearched] = useState(false);
 
   useEffect(() => {
-    handleGetFollowing();
-    handleGetRequests();
-    if (!friends) {
-      handleGetFriends();
-    }
+    // handleGetFollowing();
+    // handleGetRequests();
+    // if (!friends) {
+    //   handleGetFriends();
+    // }
   }, []);
 
-  const handleGetFriends = async () => {
-    const response = await getFriends(user.id);
-    if (response.error) return;
-    setFriends(response.data?.users);
-  };
+  // const handleGetFriends = async () => {
+  //   const response = await getFriends(user.id);
+  //   if (response.error) return;
+  //   setFriends(response.data?.data);
+  // };
 
-  const handleGetFollowing = async () => {
-    const response = await getFollowing(user.id);
-    if (response.error) return;
-    _setFollowing(response.data);
-  };
+  // const handleGetFollowing = async () => {
+  //   const response = await getFollowing(user.id);
+  //   if (response.error) return;
+  //   _setFollowing(response.data);
+  // };
 
-  const handleGetRequests = async () => {
-    const response = await getRequests(user.id);
-    if (response.error) return;
-    setRequests(response.data);
-  };
+  // const handleGetRequests = async () => {
+  //   const response = await getRequests(user.id);
+  //   if (response.error) return;
+  //   setRequests(response.data);
+  // };
 
   const handleSearch = async () => {
     const isValid = username.test(query);
     if (!isValid) return showToast('error', 'Please enter a valid username.');
-    const response = await searchUsers(user.id, query);
+    const response = await users.search(query);
     if (!searched) setSearched(true);
-    if (response.error)
-      return showToast('error', 'Could not search for users!');
-    setUsers(response.data ? response.data : []);
+    if (response.error) return showToast('error', 'Could not search for data!');
+    setData(response.data ? response.data : []);
   };
 
-  const handleFollow = async (remoteUser: IUser) => {
-    _setFollowing((prev: any) =>
-      prev ? {...prev, [remoteUser.id]: true} : {[remoteUser.id]: true},
-    );
-    if (following) {
-      setFollowing((prev: any) => [...prev, remoteUser]);
-    }
-    handleUser({...user, following: user.following + 1});
-    const {id, username, avatar} = user;
-    await follow({id, username, avatar}, remoteUser);
-    storeJson('user', {...user, following: user.following + 1});
-  };
+  // const handleFollow = async (remoteUser: IUser) => {
+  //   _setFollowing((prev: any) =>
+  //     prev ? {...prev, [remoteUser.id]: true} : {[remoteUser.id]: true},
+  //   );
+  //   if (following) {
+  //     setFollowing((prev: any) => [...prev, remoteUser]);
+  //   }
+  //   handleUser({...user, following: user.following + 1});
+  //   const {id, username, avatar} = user;
+  //   await follow({id, username, avatar}, remoteUser);
+  //   storeJson('user', {...user, following: user.following + 1});
+  // };
 
-  const handleUnfollow = async (remoteUser: IUser) => {
-    _setFollowing((prev: any) => {
-      delete prev[remoteUser.id];
-    });
-    if (following) {
-      setFollowing((prev: Array<any>) =>
-        prev.filter(item => item.id !== remoteUser.id),
-      );
-    }
-    handleUser({...user, following: user.following - 1});
-    const {id, username, avatar} = user;
-    await unfollow({id, username, avatar}, remoteUser);
-    storeJson('user', {...user, following: user.following - 1});
-  };
+  // const handleUnfollow = async (remoteUser: IUser) => {
+  //   _setFollowing((prev: any) => {
+  //     delete prev[remoteUser.id];
+  //   });
+  //   if (following) {
+  //     setFollowing((prev: Array<any>) =>
+  //       prev.filter(item => item.id !== remoteUser.id),
+  //     );
+  //   }
+  //   handleUser({...user, following: user.following - 1});
+  //   const {id, username, avatar} = user;
+  //   await unfollow({id, username, avatar}, remoteUser);
+  //   storeJson('user', {...user, following: user.following - 1});
+  // };
 
-  const handleSendRequest = async (remoteUser: IUser) => {
-    setRequests((prev: any) =>
-      prev ? {...prev, [remoteUser.id]: true} : {[remoteUser.id]: true},
-    );
-    const {id, username, avatar} = user;
-    await sendFriendRequest({id, username, avatar}, remoteUser);
-  };
+  // const handleSendRequest = async (remoteUser: IUser) => {
+  //   setRequests((prev: any) =>
+  //     prev ? {...prev, [remoteUser.id]: true} : {[remoteUser.id]: true},
+  //   );
+  //   const {id, username, avatar} = user;
+  //   await sendFriendRequest({id, username, avatar}, remoteUser);
+  // };
 
-  const handleRemoveRequest = async (remoteUser: IUser) => {
-    setRequests((prev: any) => delete prev[remoteUser.id]);
-    const {id, username, avatar} = user;
-    await removeRequest({id, username, avatar}, remoteUser);
-  };
+  // const handleRemoveRequest = async (remoteUser: IUser) => {
+  //   setRequests((prev: any) => delete prev[remoteUser.id]);
+  //   const {id, username, avatar} = user;
+  //   await removeRequest({id, username, avatar}, remoteUser);
+  // };
 
-  const handleRemoveFriend = async (remoteUser: IUser) => {
-    setFriends((prev: Array<any>) =>
-      prev.filter(item => item.id !== remoteUser.id),
-    );
-    const _user = {id: user.id, username: user.username, avatar: user.avatar};
-    handleUser({...user, friends: user.friends - 1});
-    await removeFriend(_user, remoteUser);
-    storeJson('user', {...user, friends: user.friends - 1});
-  };
+  // const handleRemoveFriend = async (remoteUser: IUser) => {
+  //   setFriends((prev: Array<any>) =>
+  //     prev.filter(item => item.id !== remoteUser.id),
+  //   );
+  //   const _user = {id: user.id, username: user.username, avatar: user.avatar};
+  //   handleUser({...user, friends: user.friends - 1});
+  //   await removeFriend(_user, remoteUser);
+  //   storeJson('user', {...user, friends: user.friends - 1});
+  // };
 
-  const renderItem = ({item}: {item: IUser}) => (
-    <UserTile
-      {...item}
-      isPrivate={item.private}
-      isFriend={friends.findIndex(_item => _item.id === item.id) !== -1}
-      handleFollow={handleFollow}
-      handleUnfollow={handleUnfollow}
-      handleSendRequest={handleSendRequest}
-      handleRemoveRequest={handleRemoveRequest}
-      handleRemoveFriend={handleRemoveFriend}
-      isFollowing={_following && _following[item.id]}
-      requested={requests && requests[item.id]}
-    />
-  );
+  const renderItem = ({item}: {item: IUser}) =>
+    item.username === user.username ? <></> : <UserTile {...item} />;
 
   return (
     <Block>
@@ -155,7 +143,7 @@ export default function Search() {
         <FlatList
           style={{flex: 1}}
           contentContainerStyle={{flex: 1}}
-          data={users}
+          data={data}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={() => (

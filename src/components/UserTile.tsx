@@ -6,64 +6,16 @@ import Button from './Button';
 import Image from './Image';
 import Text from './Text';
 
+import Feather from 'react-native-vector-icons/Feather';
+
 interface Props {
   id: string;
   username: string;
   avatar: string;
-  email: string;
-  followers: number;
-  following: number;
-  friends: number;
-  isPrivate?: boolean;
-  isFollowing?: boolean;
-  isFriend?: boolean;
-  requested?: boolean;
-  handleFollow?: (remoteUser: any) => void;
-  handleUnfollow?: (remoteUser: any) => void;
-  handleSendRequest?: (remoteUser: any) => void;
-  handleRemoveRequest?: (remoteUser: any) => void;
-  handleRemoveFriend?: (remoteUser: any) => void;
 }
 
-function UserTile({
-  avatar,
-  username,
-  id,
-  isPrivate,
-  followers,
-  following,
-  friends,
-  isFollowing,
-  isFriend,
-  requested,
-  handleFollow,
-  handleUnfollow,
-  handleSendRequest,
-  handleRemoveRequest,
-  handleRemoveFriend,
-}: Props) {
+function UserTile({avatar, username, id}: Props) {
   const {sizes, colors} = useTheme();
-
-  const onPress = () => {
-    const remoteUser = {id, username, avatar};
-    if (isFollowing) {
-      handleUnfollow && handleUnfollow(remoteUser);
-    } else {
-      handleFollow && handleFollow(remoteUser);
-    }
-  };
-
-  const onPressRequest = () => {
-    const remoteUser = {id, username, avatar};
-    if (isFriend) {
-      handleRemoveFriend && handleRemoveFriend(remoteUser);
-    }
-    if (requested) {
-      handleRemoveRequest && handleRemoveRequest(remoteUser);
-    } else {
-      handleSendRequest && handleSendRequest(remoteUser);
-    }
-  };
 
   return (
     <Button
@@ -73,13 +25,7 @@ function UserTile({
             id,
             username,
             avatar,
-            isPrivate,
-            followers,
-            following,
-            friends,
           },
-          isFriend,
-          isFollowing,
         })
       }
       flex={0}
@@ -112,21 +58,7 @@ function UserTile({
 
       <Block />
 
-      <Button
-        color={colors.background}
-        flex={0}
-        onPress={onPress}
-        paddingHorizontal={sizes.padding}>
-        <Text>{isFollowing ? 'Unfollow' : 'Follow'}</Text>
-      </Button>
-      <Button
-        onPress={onPressRequest}
-        color={colors.background}
-        marginLeft={sizes.padding / 2}
-        flex={0}
-        paddingHorizontal={sizes.padding}>
-        <Text>{isFriend ? 'Friend' : requested ? 'Requested' : 'Request'}</Text>
-      </Button>
+      <Feather name="chevron-right" size={sizes.md} color={colors.text} />
     </Button>
   );
 }

@@ -6,12 +6,12 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {ActivityIndicator, FlatList} from 'react-native';
 import imageUpload from '../services/imageUpload';
 import {showToast} from '../services/toast';
-import {getPosts, updateDoc} from '../services/api';
 import {storeJson} from '../services/store';
 import {navigate} from '../services/navigation';
 import {IPost} from '../constants/types';
 import Post from '../components/Post';
 import EmptyList from '../components/EmptyList';
+import {users} from '../services/api';
 
 export default function Profile() {
   const {user, handleUser} = useData();
@@ -26,9 +26,9 @@ export default function Profile() {
   }, []);
 
   const handleGetPosts = async () => {
-    const response = await getPosts(user.id);
-    if (response.error) return showToast('error', 'Could not get posts');
-    setPosts(response.data ? response.data : []);
+    // const response = await getPosts(user.id);
+    // if (response.error) return showToast('error', 'Could not get posts');
+    // setPosts(response.data ? response.data : []);
   };
 
   const handleImage = () => {
@@ -50,6 +50,7 @@ export default function Profile() {
   const handleUploadImage = async () => {
     setLoading(true);
     const imageResponse: any = await imageUpload(user.id, avatar);
+    console.log('image', imageResponse);
     if (imageResponse.error) {
       setLoading(false);
       return showToast('error', 'Could not upload image!');
@@ -57,7 +58,7 @@ export default function Profile() {
     const payload = {
       avatar: imageResponse.data,
     };
-    const response = await updateDoc('users', user.id, payload);
+    const response = await users.update(payload);
     if (response.error) {
       setLoading(false);
       return showToast('error', 'Could not update image!');
@@ -89,10 +90,6 @@ export default function Profile() {
     <Block>
       <Block
         color={colors.card}
-        // style={{
-        //   borderBottomLeftRadius: sizes.cardRadius,
-        //   borderBottomRightRadius: sizes.cardRadius,
-        // }}
         paddingHorizontal={sizes.padding}
         paddingVertical={sizes.padding}
         flex={0}>
