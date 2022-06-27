@@ -1,5 +1,5 @@
 import {IUser} from '../../constants/types';
-import {friends} from '../api';
+import {api} from '../api';
 import {showToast} from '../toast';
 
 export const handleRequest = async (
@@ -15,7 +15,7 @@ export const handleRequest = async (
     },
     userId,
   };
-  const response = await friends.request(data);
+  const response = await api.friends.request(data);
   if (response.error) return showToast('error', response.error);
   return (
     setRelations &&
@@ -31,10 +31,14 @@ export const handleAccept = async (
   requestId: string,
   _friends: any,
   setFriends: any,
+  setFriendRequests: any,
 ) => {
-  const response = await friends.accept(requestId);
+  const response = await api.friends.accept(requestId);
   if (response.error) return showToast('error', response.error);
   if (_friends) setFriends((prev: any) => [...prev, remote]);
+  setFriendRequests((prev: any) =>
+    prev.filter((item: any) => item.id !== requestId),
+  );
   return;
 };
 
@@ -44,7 +48,7 @@ export const handleReject = async (
   _friends: any,
   setFriends: any,
 ) => {
-  const response = await friends.accept(requestId);
+  const response = await api.friends.accept(requestId);
   if (response.error) return showToast('error', response.error);
   if (_friends)
     setFriends(_friends.filter((item: any) => item.remote.id !== remoteId));
@@ -53,12 +57,11 @@ export const handleReject = async (
 
 export const handleRemove = async (
   remoteId: string,
-  requestId: string,
   _friends: any,
   setFriends: any,
   setRelations?: any,
 ) => {
-  const response = await friends.remove(requestId);
+  const response = await api.friends.remove(remoteId);
   if (response.error) return showToast('error', response.error);
   if (_friends)
     setFriends(_friends.filter((item: any) => item.remote.id !== remoteId));
@@ -75,7 +78,7 @@ export const handleRemoveRequest = async (
   requestId: string,
   setRelations?: any,
 ) => {
-  const response = await friends.remove(requestId);
+  const response = await api.friends.remove(requestId);
   if (response.error) return showToast('error', response.error);
   return (
     setRelations &&

@@ -12,3 +12,4 @@ export {default as User} from './User';
 export {default as CreatePost} from './CreatePost';
 export {default as Posts} from './Posts';
 export {default as Verification} from './Verification';
+export {default as FollowRequests} from './FollowRequests';

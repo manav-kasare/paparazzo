@@ -4,6 +4,7 @@ import {
   CreatePost,
   Followers,
   Following,
+  FollowRequests,
   Friends,
   Posts,
   Requests,
@@ -30,6 +31,7 @@ export default function Screens() {
       <Stack.Screen name="Following" component={Following} />
       <Stack.Screen name="Friends" component={Friends} />
       <Stack.Screen name="Requests" component={Requests} />
+      <Stack.Screen name="FollowRequests" component={FollowRequests} />
       <Stack.Screen name="User" component={User} options={{headerTitle: ''}} />
       <Stack.Screen name="Posts" component={Posts} />
       <Stack.Screen

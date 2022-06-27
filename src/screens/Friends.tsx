@@ -6,7 +6,6 @@ import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
 import {getFriends, getRequestsWithId, removeFriend} from '../services/api';
 import {navigate} from '../services/navigation';
-import {storeJson} from '../services/store';
 
 export default function Friends() {
   const {sizes, colors} = useTheme();
@@ -44,7 +43,6 @@ export default function Friends() {
     const _user = {id: user.id, username: user.username, avatar: user.avatar};
     handleUser({...user, friends: user.friends - 1});
     await removeFriend(_user, remoteUser);
-    storeJson('user', {...user, friends: user.friends - 1});
   };
 
   const renderItem = ({item}: any) => (

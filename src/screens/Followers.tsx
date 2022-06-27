@@ -1,15 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
-import {Block, Loading, SmallUserTile} from '../components';
+import {Block, Loading, SmallUserTile, Text, Tile} from '../components';
 import EmptyList from '../components/EmptyList';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
-import {getDoc, removeFollower} from '../services/api';
-import {storeJson} from '../services/store';
+import {follows} from '../services/api';
+import {handleRemove} from '../services/helpers/follows';
+import {navigate} from '../services/navigation';
 
 export default function Followers() {
-  const {sizes} = useTheme();
-  const {followers, setFollowers, user, handleUser} = useData();
+  const {sizes, colors} = useTheme();
+  const {
+    followers,
+    setFollowers,
+    user,
+    handleUser,
+    followRequests,
+    setFollowRequests,
+  } = useData();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -17,37 +25,62 @@ export default function Followers() {
       setLoading(true);
       handleGetFollowers();
     }
+    if (!followRequests) {
+      handleGetFollowRequests();
+    }
   }, []);
 
   const handleGetFollowers = async () => {
-    const response = await getDoc('followers', user.id);
+    const response = await follows.followers();
     if (response.error) return;
-    setFollowers(response.data?.users);
+    setFollowers(response.data ? response.data : []);
     setLoading(false);
   };
 
+  const handleGetFollowRequests = async () => {
+    const response = await follows.requests();
+    if (response.error) return;
+    setFollowRequests(response.data ? response.data : []);
+  };
+
   const handleRemoveFollower = async (remoteUser: IUser) => {
-    if (followers) {
-      setFollowers((prev: Array<any>) =>
-        prev.filter(item => item.id !== remoteUser.id),
-      );
-    }
-    handleUser({...user, followers: user.followers - 1});
-    const {id, username, avatar} = user;
-    await removeFollower({id, username, avatar}, remoteUser);
-    storeJson('user', {...user, followers: user.followers - 1});
+    await handleRemove(
+      user,
+      remoteUser.id,
+      handleUser,
+      followers,
+      setFollowers,
+    );
   };
 
   const renderItem = ({item}: any) => (
     <SmallUserTile
       handleRemoveFollower={handleRemoveFollower}
       type="followers"
-      {...item}
+      {...item.user}
     />
   );
 
   return (
     <Block paddingVertical={sizes.padding}>
+      <Tile
+        text="Follow Requests"
+        onPress={() => navigate('FollowRequests')}
+        right={
+          <Block
+            flex={0}
+            radius={sizes.md / 2}
+            height={sizes.md}
+            width={sizes.md}
+            align="center"
+            justify="center"
+            color={colors.primary}>
+            <Text color={colors.background}>
+              {followRequests ? followRequests.length : 0}
+            </Text>
+          </Block>
+        }
+      />
       {loading ? (
         <Loading />
       ) : (

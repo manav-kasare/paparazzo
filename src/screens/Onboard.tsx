@@ -4,9 +4,9 @@ import {ActivityIndicator} from 'react-native';
 import * as Yup from 'yup';
 import {Block, Button, Input, Seperator, Text} from '../components';
 import {useData, useTheme} from '../hooks';
-import {setHeader, users} from '../services/api';
+import {api, setHeader} from '../services/api';
 import {navigate} from '../services/navigation';
-import {storeJson, storeString} from '../services/store';
+import {storeString} from '../services/store';
 import {showToast} from '../services/toast';
 
 export default function Onboard() {
@@ -35,7 +35,7 @@ export default function Onboard() {
       email: values.email,
       password: values.password,
     };
-    const response = await users.authenticate(payload);
+    const response = await api.users.authenticate(payload);
     console.log('response', response);
     if (response.error) {
       setLoading(false);
@@ -54,7 +54,6 @@ export default function Onboard() {
     setLoading(false);
     setHeader(response.data.token);
     storeString('token', response.data.token);
-    storeJson('user', response.data.user);
   };
 
   return (

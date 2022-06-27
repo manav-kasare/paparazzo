@@ -49,7 +49,7 @@ const put = async (endpoint: string, payload?: Object) => {
   }
 };
 
-export const users = {
+const users = {
   me: async () => await get('/users/me'),
   get: async (id: string) => await get('/users/user/' + id),
   search: async (q: string) => await get('/users/search?query=' + q),
@@ -60,7 +60,7 @@ export const users = {
   authenticate: async (data: Object) => await post('/users/authenticate', data),
 };
 
-export const follows = {
+const follows = {
   followers: async () => await get('/follows/followers'),
   following: async () => await get('/follows/following'),
   requests: async () => await get('/follows/requests'),
@@ -75,12 +75,20 @@ export const follows = {
     await post(`/follows/requests/${id}/remove`),
 };
 
-export const friends = {
+const friends = {
   get: async () => await get('/friends/'),
-  remove: async (id: string) => await post(`/friends/${id}/remove`),
+  getRequest: async (userId: string) =>
+    await get('/friends/request?userId' + userId),
+  remove: async (id: string) => await post(`/friends/remove?userId=` + id),
   request: async (data: Object) => await post('/friends/requests', data),
   accept: async (id: string) => await post(`/friends/requests/${id}/accept`),
   reject: async (id: string) => await post(`/friends/requests/${id}/reject`),
   removeRequest: async (id: string) =>
     await post(`/friends/requests/${id}/remove`),
+};
+
+export const api = {
+  users,
+  friends,
+  follows,
 };

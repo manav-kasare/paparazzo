@@ -5,7 +5,6 @@ import EmptyList from '../components/EmptyList';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
 import {accept, getRequestsWithId, reject} from '../services/api';
-import {storeJson} from '../services/store';
 
 export default function Requests() {
   const {sizes} = useTheme();
@@ -32,7 +31,6 @@ export default function Requests() {
     const _user = {id: user.id, username: user.username, avatar: user.avatar};
     handleUser({...user, friends: user.friends + 1});
     await accept(_user, remoteUser, requestId);
-    storeJson('user', {...user, friends: user.friends + 1});
   };
 
   const handleReject = async (remoteUser: IUser, requestId: string) => {

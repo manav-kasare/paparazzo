@@ -23,11 +23,7 @@ function EmptyList({text, sad, type, action, actionText}: Props) {
       : require('../assets/images/dawn.png');
 
   return (
-    <Block
-      flex={1}
-      marginBottom={sizes.padding * 4}
-      align="center"
-      justify="center">
+    <Block flex={1} align="center" justify="center">
       {(sad || type) && <Image source={source} height={200} width={200} />}
       <Text color={colors.gray} marginTop={sizes.padding}>
         {text}

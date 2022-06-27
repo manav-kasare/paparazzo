@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Block, Tile} from '../components';
 import {useData, useTheme} from '../hooks';
-import {users} from '../services/api';
-import {removeItem, storeJson} from '../services/store';
+import {api} from '../services/api';
+import {removeItem} from '../services/store';
 
 export default function Settings() {
   const {
@@ -11,7 +11,8 @@ export default function Settings() {
     setFollowers,
     setFollowing,
     setFriends,
-    setRequests,
+    setFriendRequests,
+    setFollowRequests,
     setToken,
   } = useData();
   const {sizes} = useTheme();
@@ -20,28 +21,27 @@ export default function Settings() {
   const signOut = async () => {
     await removeItem('user');
     await removeItem('token');
-    await users.signout();
+    await api.users.signout();
     handleUser(undefined);
     setToken(undefined);
     setFollowers(null);
     setFollowing(null);
     setFriends(null);
-    setRequests(null);
+    setFollowRequests(null);
+    setFriendRequests(null);
   };
 
   const handleSwitch = async () => {
     if (isPrivate) {
       setIsPrivate(false);
-      await users.update({isPrivate: false});
+      await api.users.update({isPrivate: false});
       const newUser = {...user, isPrivate: false};
       handleUser(newUser);
-      storeJson('user', newUser);
     } else {
       setIsPrivate(true);
-      await users.update({isPrivate: true});
+      await api.users.update({isPrivate: true});
       const newUser = {...user, isPrivate: true};
       handleUser(newUser);
-      storeJson('user', newUser);
     }
   };
 

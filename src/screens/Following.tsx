@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
-import {Block, Loading, SmallUserTile, UserTile} from '../components';
+import {Block, Loading, SmallUserTile} from '../components';
 import EmptyList from '../components/EmptyList';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
 import {getDoc, unfollow} from '../services/api';
 import {navigate} from '../services/navigation';
-import {storeJson} from '../services/store';
 
 export default function Following() {
   const {sizes} = useTheme();
@@ -36,7 +35,6 @@ export default function Following() {
     handleUser({...user, following: user.following - 1});
     const {id, username, avatar} = user;
     await unfollow({id, username, avatar}, remoteUser);
-    storeJson('user', {...user, following: user.following - 1});
   };
 
   const renderItem = ({item}: any) => (

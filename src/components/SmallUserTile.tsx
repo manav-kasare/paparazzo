@@ -1,5 +1,16 @@
 import React from 'react';
 import {useData, useTheme} from '../hooks';
+import {
+  handleAccept as handleAcceptFollow,
+  handleReject as handleRejectFollow,
+  handleRemove as handleRemoveFollower,
+  handleUnfollow,
+} from '../services/helpers/follows';
+import {
+  handleAccept as handleAcceptFriend,
+  handleReject as handleRejectFriend,
+  handleRemove as handleRemoveFriend,
+} from '../services/helpers/friends';
 import {navigate} from '../services/navigation';
 import Block from './Block';
 import Button from './Button';
@@ -11,45 +22,61 @@ interface Props {
   username: string;
   avatar: string;
   type: string;
-  requestId?: string;
-  handleUnfollow?: (remoteUser: any) => void;
-  handleRemoveFollower?: (remoteUser: any) => void;
-  handleRemoveFriend?: (remoteUser: any) => void;
-  handleAccept?: (remoteUser: any, requestId?: string) => void;
-  handleReject?: (remoteUser: any, requestId?: string) => void;
+  requestId: string;
 }
 
-function SmallUserTile({
-  id,
-  username,
-  avatar,
-  handleUnfollow,
-  handleRemoveFollower,
-  handleRemoveFriend,
-  type,
-  requestId,
-  handleAccept,
-  handleReject,
-}: Props) {
+function SmallUserTile({id, username, avatar, type, requestId}: Props) {
   const {sizes, colors} = useTheme();
+  const {
+    user,
+    handleUser,
+    followers,
+    setFollowRequests,
+    setFollowers,
+    friends,
+    setFriends,
+    following,
+    setFollowing,
+    setFriendRequests,
+  } = useData();
 
-  const onPress = () => {
-    const remoteUser = {id, username, avatar};
-    if (type === 'following') handleUnfollow && handleUnfollow(remoteUser);
-    else if (type === 'followers')
-      handleRemoveFollower && handleRemoveFollower(remoteUser);
+  const onPressRemove = () => {
+    if (type === 'following') {
+      handleUnfollow(user, id, handleUser, following, setFollowing);
+    } else if (type === 'followers')
+      handleRemoveFollower(user, id, handleUser, followers, setFollowers);
     else if (type === 'friends')
-      handleRemoveFriend && handleRemoveFriend(remoteUser);
+      handleRemoveFriend(id, requestId, friends, setFriends);
   };
 
-  const _handleAccept = () => {
+  const _handleAccept = async () => {
     const remoteUser = {id, username, avatar};
-    handleAccept && handleAccept(remoteUser, requestId);
+    if (type == 'followRequest') {
+      await handleAcceptFollow(
+        user,
+        remoteUser,
+        handleUser,
+        followers,
+        setFollowers,
+        setFollowRequests,
+      );
+    } else {
+      await handleAcceptFriend(
+        remoteUser,
+        requestId,
+        friends,
+        setFriends,
+        setFriendRequests,
+      );
+    }
   };
 
-  const _handleReject = () => {
-    const remoteUser = {id, username, avatar};
-    handleReject && handleReject(remoteUser, requestId);
+  const _handleReject = async () => {
+    if (type == 'followRequest') {
+      await handleRejectFollow(requestId, setFollowRequests);
+    } else {
+      await handleRejectFriend(id, requestId, friends, setFriends);
+    }
   };
 
   const handleTilePress = () => {
@@ -60,8 +87,6 @@ function SmallUserTile({
     };
     navigate('User', {
       userParam: remoteUser,
-      isFriend: type === 'friends',
-      halfUser: true,
     });
   };
 
@@ -105,7 +130,7 @@ function SmallUserTile({
               color={colors.background}
               flex={0}
               paddingHorizontal={sizes.m}
-              onPress={onPress}
+              onPress={onPressRemove}
               paddingVertical={sizes.s}>
               <Text>Unfollow</Text>
             </Button>
@@ -114,11 +139,11 @@ function SmallUserTile({
               color={colors.background}
               flex={0}
               paddingHorizontal={sizes.m}
-              onPress={onPress}
+              onPress={onPressRemove}
               paddingVertical={sizes.s}>
               <Text>Remove</Text>
             </Button>
-          ) : type === 'request' ? (
+          ) : type === 'followRequest' || type === 'friendRequest' ? (
             <Block row flex={0}>
               <Button
                 color={colors.background}
@@ -143,7 +168,7 @@ function SmallUserTile({
               color={colors.background}
               flex={0}
               paddingHorizontal={sizes.m}
-              onPress={onPress}
+              onPress={onPressRemove}
               paddingVertical={sizes.s}>
               <Text>Remove</Text>
             </Button>

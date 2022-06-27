@@ -5,14 +5,26 @@ import {Block, Button, Image, Loading, Text} from '../components';
 import EmptyList from '../components/EmptyList';
 import {IPost} from '../constants/types';
 import {useData, useTheme} from '../hooks';
-import {follows, users} from '../services/api';
+import {api} from '../services/api';
+import {
+  handleFollow,
+  handleFollowRequest as handleRemoveFollowRequest,
+  handleRemoveRequest,
+  handleUnfollow,
+} from '../services/helpers/follows';
+import {
+  handleRemove,
+  handleRemoveRequest as handleRemoveFriendRequest,
+  handleRequest as handleFriendRequest,
+} from '../services/helpers/friends';
 import {navigate} from '../services/navigation';
 import {showToast} from '../services/toast';
 
 export default function User() {
   const route = useRoute();
   const {sizes, colors} = useTheme();
-  const {user, handleUser, followers, setFollowers} = useData();
+  const {user, handleUser, following, setFollowing, friends, setFriends} =
+    useData();
   const {userParam}: any = route.params;
   const {id, username, avatar} = userParam;
 
@@ -36,18 +48,20 @@ export default function User() {
   const [canSeePosts, setCanSeePosts] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     handleGetRelations();
     handleGetUser();
   }, []);
 
   const handleGetRelations = async () => {
-    const response = await users.relations(id);
+    const response = await api.users.relations(id);
     if (response.error) return;
     setRelations({...relations, ...response.data});
+    setLoading(false);
   };
 
   const handleGetUser = async () => {
-    const response = await users.get(id);
+    const response = await api.users.get(id);
     if (response.error) return;
     _setUser(prev => ({...prev, ...response.data}));
     const _canSeePosts =
@@ -57,6 +71,52 @@ export default function User() {
   };
 
   const handleGetPosts = async () => {};
+
+  const onPressFollowButton = async () => {
+    if (relations.isFollowing) {
+      await handleUnfollow(
+        user,
+        id,
+        handleUser,
+        following,
+        setFollowing,
+        setRelations,
+      );
+    } else {
+      if (relations.followRequested) {
+        await handleRemoveRequest(id, setRelations);
+      } else {
+        if (_user.isPrivate) {
+          await handleRemoveFollowRequest(user, id, setRelations);
+        } else {
+          const remoteUser = {id, username, avatar};
+          await handleFollow(
+            user,
+            remoteUser,
+            handleUser,
+            following,
+            setFollowing,
+            setRelations,
+          );
+        }
+      }
+    }
+  };
+
+  const onPresssFriendButton = async () => {
+    if (relations.isFriend) {
+      await handleRemove(id, friends, setFriends, setRelations);
+    } else {
+      if (relations.friendRequested) {
+        const response = await api.friends.getRequest(id);
+        if (response.error)
+          return showToast('error', 'Could not remove request!');
+        await handleRemoveFriendRequest(response.data.id, setRelations);
+      } else {
+        await handleFriendRequest(user, id, setRelations);
+      }
+    }
+  };
 
   const handlePost = () => {
     navigate('CreatePost', {
@@ -160,7 +220,7 @@ export default function User() {
           <Block marginBottom={sizes.padding} flex={0} row>
             <Button
               flex={1}
-              onPress={handlePost}
+              onPress={onPressFollowButton}
               color={colors.background}
               marginLeft={sizes.padding / 2}
               paddingHorizontal={sizes.padding}>
@@ -176,14 +236,14 @@ export default function User() {
             </Button>
             <Button
               flex={1}
-              onPress={handlePost}
+              onPress={onPresssFriendButton}
               color={colors.background}
               marginLeft={sizes.padding / 2}
               paddingHorizontal={sizes.padding}>
               <Text>
                 {relations.isFriend
                   ? 'Friends'
-                  : relations.followRequested
+                  : relations.friendRequested
                   ? 'Freind Requested'
                   : 'Freind Request'}
               </Text>

@@ -1,6 +1,7 @@
 import React, {useCallback, useContext, useState} from 'react';
 import {dark} from '../constants';
 import {ITheme, IUseData, IUser} from '../constants/types';
+import {storeJson} from '../services/store';
 
 export const DataContext = React.createContext({});
 
@@ -11,14 +12,15 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [following, setFollowing] = useState<Array<any> | null>(null);
   const [followers, setFollowers] = useState<Array<any> | null>(null);
   const [friends, setFriends] = useState<Array<any> | null>(null);
-  const [requests, setRequests] = useState<Array<any> | null>(null);
+  const [friendRequests, setFriendRequests] = useState<Array<any> | null>(null);
+  const [followRequests, setFollowRequests] = useState<Array<any> | null>(null);
 
-  // handle user
   const handleUser = useCallback(
     (payload: IUser) => {
       // set user / compare if has updated
       if (JSON.stringify(payload) !== JSON.stringify(user)) {
         setUser(payload);
+        storeJson('user', payload);
       }
     },
     [user, setUser],
@@ -37,8 +39,10 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     setFollowers,
     friends,
     setFriends,
-    requests,
-    setRequests,
+    friendRequests,
+    setFriendRequests,
+    followRequests,
+    setFollowRequests,
   };
 
   return (

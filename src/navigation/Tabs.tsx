@@ -14,10 +14,9 @@ export default function Tabs({navigation}: {navigation: any}) {
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          borderTopRightRadius: sizes.cardRadius,
-          borderTopLeftRadius: sizes.cardRadius,
+          // borderTopRightRadius: sizes.cardRadius,
+          // borderTopLeftRadius: sizes.cardRadius,
           backgroundColor: colors.card,
-          position: 'absolute',
           height: sizes.height * 0.08,
           borderTopColor: 'transparent',
         },

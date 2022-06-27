@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Block, Button, Image, PostTile, Text} from '../components';
-import {useData, useTheme} from '../hooks';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import ImagePicker from 'react-native-image-crop-picker';
 import {ActivityIndicator, FlatList} from 'react-native';
-import imageUpload from '../services/imageUpload';
-import {showToast} from '../services/toast';
-import {storeJson} from '../services/store';
-import {navigate} from '../services/navigation';
-import {IPost} from '../constants/types';
-import Post from '../components/Post';
+import ImagePicker from 'react-native-image-crop-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Block, Button, Image, Text} from '../components';
 import EmptyList from '../components/EmptyList';
-import {users} from '../services/api';
+import {IPost} from '../constants/types';
+import {useData, useTheme} from '../hooks';
+import {api} from '../services/api';
+import imageUpload from '../services/imageUpload';
+import {navigate} from '../services/navigation';
+import {showToast} from '../services/toast';
 
 export default function Profile() {
   const {user, handleUser} = useData();
@@ -58,7 +56,7 @@ export default function Profile() {
     const payload = {
       avatar: imageResponse.data,
     };
-    const response = await users.update(payload);
+    const response = await api.users.update(payload);
     if (response.error) {
       setLoading(false);
       return showToast('error', 'Could not update image!');
@@ -67,7 +65,6 @@ export default function Profile() {
     handleUser({...user, ...payload});
     setImageChanged(false);
     showToast('success', 'Avatar updated!');
-    await storeJson('user', {...user, ...payload});
   };
 
   const renderItem = ({item}: {item: IPost}) => (

@@ -3,16 +3,16 @@ import {Formik} from 'formik';
 import React, {useState} from 'react';
 import {ActivityIndicator} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Yup from 'yup';
 import {Block, Button, Image, Input, Text} from '../components';
 import {username} from '../constants/regex';
 import {useData, useTheme} from '../hooks';
-import imageUpload from '../services/imageUpload';
-import {storeJson, storeString} from '../services/store';
-import {showToast} from '../services/toast';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {users} from '../services/api';
+import {api} from '../services/api';
 import {getToken} from '../services/fcm';
+import imageUpload from '../services/imageUpload';
+import {storeString} from '../services/store';
+import {showToast} from '../services/toast';
 
 export default function ProfileSetup() {
   const {sizes, colors, gradients, icons} = useTheme();
@@ -67,7 +67,7 @@ export default function ProfileSetup() {
       friends: 0,
       isPrivate: true,
     };
-    const response = await users.signup(payload);
+    const response = await api.users.signup(payload);
     console.log('response', response);
     if (response.error) {
       setLoading(false);
@@ -76,7 +76,6 @@ export default function ProfileSetup() {
     setLoading(false);
     handleUser(response.data.user);
     setToken(response.data.token);
-    storeJson('user', response.data.user);
     storeString('token', response.data.token);
     return showToast('success', 'Registered successfully!');
   };

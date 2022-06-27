@@ -2,7 +2,7 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {ThemeProvider, useData} from '../hooks';
-import {setHeader, users} from '../services/api';
+import {api, setHeader} from '../services/api';
 import {navigationRef} from '../services/navigation';
 import {getJson, getString} from '../services/store';
 import Auth from './Auth';
@@ -28,7 +28,7 @@ export default function () {
     const storedUser = await getJson('user');
     setToken(_token);
     handleUser(storedUser);
-    const response = await users.me();
+    const response = await api.users.me();
     handleUser(response.data);
   };
 

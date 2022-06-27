@@ -6,18 +6,6 @@ import {username} from '../constants/regex';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
 import {users} from '../services/api';
-// import {
-//   follow,
-//   getFollowing,
-//   getFriends,
-//   getRequests,
-//   removeFriend,
-//   removeRequest,
-//   searchUsers,
-//   sendFriendRequest,
-//   unfollow,
-// } from '../services/api';
-import {storeJson} from '../services/store';
 import {showToast} from '../services/toast';
 
 export default function Search() {
@@ -64,58 +52,6 @@ export default function Search() {
     if (response.error) return showToast('error', 'Could not search for data!');
     setData(response.data ? response.data : []);
   };
-
-  // const handleFollow = async (remoteUser: IUser) => {
-  //   _setFollowing((prev: any) =>
-  //     prev ? {...prev, [remoteUser.id]: true} : {[remoteUser.id]: true},
-  //   );
-  //   if (following) {
-  //     setFollowing((prev: any) => [...prev, remoteUser]);
-  //   }
-  //   handleUser({...user, following: user.following + 1});
-  //   const {id, username, avatar} = user;
-  //   await follow({id, username, avatar}, remoteUser);
-  //   storeJson('user', {...user, following: user.following + 1});
-  // };
-
-  // const handleUnfollow = async (remoteUser: IUser) => {
-  //   _setFollowing((prev: any) => {
-  //     delete prev[remoteUser.id];
-  //   });
-  //   if (following) {
-  //     setFollowing((prev: Array<any>) =>
-  //       prev.filter(item => item.id !== remoteUser.id),
-  //     );
-  //   }
-  //   handleUser({...user, following: user.following - 1});
-  //   const {id, username, avatar} = user;
-  //   await unfollow({id, username, avatar}, remoteUser);
-  //   storeJson('user', {...user, following: user.following - 1});
-  // };
-
-  // const handleSendRequest = async (remoteUser: IUser) => {
-  //   setRequests((prev: any) =>
-  //     prev ? {...prev, [remoteUser.id]: true} : {[remoteUser.id]: true},
-  //   );
-  //   const {id, username, avatar} = user;
-  //   await sendFriendRequest({id, username, avatar}, remoteUser);
-  // };
-
-  // const handleRemoveRequest = async (remoteUser: IUser) => {
-  //   setRequests((prev: any) => delete prev[remoteUser.id]);
-  //   const {id, username, avatar} = user;
-  //   await removeRequest({id, username, avatar}, remoteUser);
-  // };
-
-  // const handleRemoveFriend = async (remoteUser: IUser) => {
-  //   setFriends((prev: Array<any>) =>
-  //     prev.filter(item => item.id !== remoteUser.id),
-  //   );
-  //   const _user = {id: user.id, username: user.username, avatar: user.avatar};
-  //   handleUser({...user, friends: user.friends - 1});
-  //   await removeFriend(_user, remoteUser);
-  //   storeJson('user', {...user, friends: user.friends - 1});
-  // };
 
   const renderItem = ({item}: {item: IUser}) =>
     item.username === user.username ? <></> : <UserTile {...item} />;
