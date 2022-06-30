@@ -8,6 +8,8 @@ import {getJson, getString} from '../services/store';
 import Auth from './Auth';
 import Screens from './Screens';
 
+import RNBootSplash from 'react-native-bootsplash';
+
 export default function () {
   const {theme, setTheme, token, setToken, user, handleUser} = useData();
 
@@ -23,11 +25,12 @@ export default function () {
 
   const checkToken = async () => {
     const _token = await getString('token');
-    if (!_token) return;
+    if (!_token) return RNBootSplash.hide({fade: true});
     setHeader(_token);
     const storedUser = await getJson('user');
     setToken(_token);
     handleUser(storedUser);
+    RNBootSplash.hide({fade: true});
     const response = await api.users.me();
     handleUser(response.data);
   };

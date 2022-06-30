@@ -89,7 +89,9 @@ export const handleUnfollow = async (
   if (response.error) return showToast('error', response.error);
   handleUser({...user, following: user.following - 1});
   if (following)
-    setFollowing((prev: any) => prev.filter((item: any) => item.id !== userId));
+    setFollowing((prev: any) =>
+      prev.filter((item: any) => item.user.id !== userId),
+    );
   return (
     setRelations &&
     setRelations((prev: any) => ({
@@ -137,7 +139,7 @@ export const handleAccept = async (
   );
   const response = await api.follows.accept(requestId, data);
   if (response.error) return showToast('error', response.error);
-  handleUser({...user, following: user.following + 1});
+  handleUser({...user, followers: user.followers + 1});
   if (followers) setFollowers((prev: any) => [...prev, response.data]);
   return;
 };

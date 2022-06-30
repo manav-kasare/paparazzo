@@ -2,9 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {Block, Loading, SmallUserTile} from '../components';
 import EmptyList from '../components/EmptyList';
-import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
-import {getDoc, unfollow} from '../services/api';
+import {api} from '../services/api';
 import {navigate} from '../services/navigation';
 
 export default function Following() {
@@ -20,25 +19,14 @@ export default function Following() {
   }, []);
 
   const handleGetFollowing = async () => {
-    const response = await getDoc('following', user.id);
+    const response = await api.follows.following();
     if (response.error) return;
-    setFollowing(response.data?.users);
+    setFollowing(response.data);
     setLoading(false);
   };
 
-  const handleUnfollow = async (remoteUser: IUser) => {
-    if (following) {
-      setFollowing((prev: Array<any>) =>
-        prev.filter(item => item.id !== remoteUser.id),
-      );
-    }
-    handleUser({...user, following: user.following - 1});
-    const {id, username, avatar} = user;
-    await unfollow({id, username, avatar}, remoteUser);
-  };
-
   const renderItem = ({item}: any) => (
-    <SmallUserTile type="following" handleUnfollow={handleUnfollow} {...item} />
+    <SmallUserTile type="following" {...item.user} />
   );
 
   const action = () => {
