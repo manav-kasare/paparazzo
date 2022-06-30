@@ -8,8 +8,8 @@ import {useData, useTheme} from '../hooks';
 import {api} from '../services/api';
 import {
   handleFollow,
-  handleFollowRequest as handleRemoveFollowRequest,
-  handleRemoveRequest,
+  handleFollowRequest,
+  handleRemoveRequest as handleRemoveFollowRequest,
   handleUnfollow,
 } from '../services/helpers/follows';
 import {
@@ -84,10 +84,10 @@ export default function User() {
       );
     } else {
       if (relations.followRequested) {
-        await handleRemoveRequest(id, setRelations);
+        await handleRemoveFollowRequest(id, setRelations);
       } else {
         if (_user.isPrivate) {
-          await handleRemoveFollowRequest(user, id, setRelations);
+          await handleFollowRequest(user, id, setRelations);
         } else {
           const remoteUser = {id, username, avatar};
           await handleFollow(

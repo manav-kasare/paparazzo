@@ -2,14 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {Block, Loading, SmallUserTile, Text, Tile} from '../components';
 import EmptyList from '../components/EmptyList';
-import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
-import {getFriends, getRequestsWithId, removeFriend} from '../services/api';
+import {api} from '../services/api';
 import {navigate} from '../services/navigation';
 
 export default function Friends() {
   const {sizes, colors} = useTheme();
-  const {requests, setRequests, friends, setFriends, user, handleUser} =
+  const {friends, setFriends, user, friendRequests, setFriendRequests} =
     useData();
   const [loading, setLoading] = useState(false);
 
@@ -18,41 +17,29 @@ export default function Friends() {
       setLoading(true);
       handleGetFriends();
     }
-    if (!requests) {
+    if (!friendRequests) {
       handleGetRequests();
     }
   }, []);
 
   const handleGetRequests = async () => {
-    const response = await getRequestsWithId(user.id);
+    const response = await api.friends.requests();
     if (response.error) return;
-    setRequests(response.data);
+    setFriendRequests(response.data);
   };
 
   const handleGetFriends = async () => {
-    const response = await getFriends(user.id);
+    const response = await api.friends.get();
     if (response.error) return;
-    setFriends(response.data?.users);
+    setFriends(response.data);
     setLoading(false);
   };
 
-  const handleRemoveFriend = async (remoteUser: IUser) => {
-    setFriends((prev: Array<any>) =>
-      prev.filter(item => item.id !== remoteUser.id),
-    );
-    const _user = {id: user.id, username: user.username, avatar: user.avatar};
-    handleUser({...user, friends: user.friends - 1});
-    await removeFriend(_user, remoteUser);
+  const renderItem = ({item}: any) => {
+    const id = item.ids.find((i: string) => i !== user.id);
+    const _user = item.users[id];
+    return <SmallUserTile type="friends" requestId={item.id} {..._user} />;
   };
-
-  const renderItem = ({item}: any) => (
-    <SmallUserTile
-      type="friends"
-      {...item}
-      isPrivate={item.private}
-      handleRemoveFriend={handleRemoveFriend}
-    />
-  );
 
   const action = () => {
     navigate('Home', {
@@ -64,7 +51,7 @@ export default function Friends() {
     <Block paddingVertical={sizes.padding}>
       <Tile
         text="Friends Requests"
-        onPress={() => navigate('Requests')}
+        onPress={() => navigate('FriendRequests')}
         right={
           <Block
             flex={0}
@@ -75,7 +62,7 @@ export default function Friends() {
             justify="center"
             color={colors.primary}>
             <Text color={colors.background}>
-              {requests ? Object.keys(requests).length : 0}
+              {friendRequests ? Object.keys(friendRequests).length : 0}
             </Text>
           </Block>
         }

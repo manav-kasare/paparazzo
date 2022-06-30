@@ -7,7 +7,7 @@ export {default as Settings} from './Settings';
 export {default as Followers} from './Followers';
 export {default as Following} from './Following';
 export {default as Friends} from './Friends';
-export {default as Requests} from './Requests';
+export {default as FriendRequests} from './FriendRequests';
 export {default as User} from './User';
 export {default as CreatePost} from './CreatePost';
 export {default as Posts} from './Posts';

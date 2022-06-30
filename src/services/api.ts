@@ -79,7 +79,8 @@ const friends = {
   get: async () => await get('/friends/'),
   getRequest: async (userId: string) =>
     await get('/friends/request?userId' + userId),
-  remove: async (id: string) => await post(`/friends/remove?userId=` + id),
+  requests: async () => await get('/friends/requests'),
+  remove: async (id: string) => await post(`/friends/remove?id=` + id),
   request: async (data: Object) => await post('/friends/requests', data),
   accept: async (id: string) => await post(`/friends/requests/${id}/accept`),
   reject: async (id: string) => await post(`/friends/requests/${id}/reject`),

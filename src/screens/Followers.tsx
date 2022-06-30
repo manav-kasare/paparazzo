@@ -4,7 +4,7 @@ import {Block, Loading, SmallUserTile, Text, Tile} from '../components';
 import EmptyList from '../components/EmptyList';
 import {IUser} from '../constants/types';
 import {useData, useTheme} from '../hooks';
-import {follows} from '../services/api';
+import {api} from '../services/api';
 import {handleRemove} from '../services/helpers/follows';
 import {navigate} from '../services/navigation';
 
@@ -31,14 +31,14 @@ export default function Followers() {
   }, []);
 
   const handleGetFollowers = async () => {
-    const response = await follows.followers();
+    const response = await api.follows.followers();
     if (response.error) return;
     setFollowers(response.data ? response.data : []);
     setLoading(false);
   };
 
   const handleGetFollowRequests = async () => {
-    const response = await follows.requests();
+    const response = await api.follows.requests();
     if (response.error) return;
     setFollowRequests(response.data ? response.data : []);
   };

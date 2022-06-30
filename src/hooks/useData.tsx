@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useState} from 'react';
 import {dark} from '../constants';
 import {ITheme, IUseData, IUser} from '../constants/types';
-import {storeJson} from '../services/store';
+import {removeItem, storeJson} from '../services/store';
 
 export const DataContext = React.createContext({});
 
@@ -17,9 +17,12 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
 
   const handleUser = useCallback(
     (payload: IUser) => {
+      if (!payload) {
+        return removeItem('user');
+      }
       // set user / compare if has updated
       if (JSON.stringify(payload) !== JSON.stringify(user)) {
-        setUser(payload);
+        setUser({...user, ...payload});
         storeJson('user', payload);
       }
     },

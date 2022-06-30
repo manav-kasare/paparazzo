@@ -29,42 +29,60 @@ export const handleRequest = async (
 export const handleAccept = async (
   remote: any,
   requestId: string,
-  _friends: any,
+  friends: any,
   setFriends: any,
   setFriendRequests: any,
+  user: IUser,
+  handleUser: any,
 ) => {
-  const response = await api.friends.accept(requestId);
-  if (response.error) return showToast('error', response.error);
-  if (_friends) setFriends((prev: any) => [...prev, remote]);
+  const data = {
+    ids: [remote.id, user.id],
+    users: {
+      [remote.id]: remote,
+      [user.id]: {
+        id: user.id,
+        avatar: user.avatar,
+        username: user.username,
+      },
+    },
+  };
+  if (friends) setFriends((prev: any) => [...prev, data]);
   setFriendRequests((prev: any) =>
     prev.filter((item: any) => item.id !== requestId),
   );
+  handleUser({friends: user.friends + 1});
+  const response = await api.friends.accept(requestId);
+  if (response.error) return showToast('error', response.error);
   return;
 };
 
 export const handleReject = async (
-  remoteId: string,
   requestId: string,
-  _friends: any,
+  friends: any,
   setFriends: any,
+  setFriendRequests: any,
 ) => {
-  const response = await api.friends.accept(requestId);
+  if (friends) setFriends(friends.filter((item: any) => item.id !== requestId));
+  setFriendRequests((prev: any) =>
+    prev.filter((item: any) => item.id !== requestId),
+  );
+  const response = await api.friends.reject(requestId);
   if (response.error) return showToast('error', response.error);
-  if (_friends)
-    setFriends(_friends.filter((item: any) => item.remote.id !== remoteId));
   return;
 };
 
 export const handleRemove = async (
-  remoteId: string,
-  _friends: any,
+  requestId: string,
+  friends: any,
   setFriends: any,
+  user: IUser,
+  handleUser: any,
   setRelations?: any,
 ) => {
-  const response = await api.friends.remove(remoteId);
+  const response = await api.friends.remove(requestId);
   if (response.error) return showToast('error', response.error);
-  if (_friends)
-    setFriends(_friends.filter((item: any) => item.remote.id !== remoteId));
+  if (friends) setFriends(friends.filter((item: any) => item.id !== requestId));
+  handleUser({friends: user.friends - 1});
   return (
     setRelations &&
     setRelations((prev: any) => ({

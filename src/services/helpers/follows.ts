@@ -1,5 +1,6 @@
 import {IRelation, IUser} from '../../constants/types';
-import {follows} from '../api';
+import {api} from '../api';
+
 import {showToast} from '../toast';
 
 type User = {
@@ -28,7 +29,7 @@ export const handleFollow = async (
       avatar: remoteUser.avatar,
     },
   };
-  const response = await follows.follow(data);
+  const response = await api.follows.follow(data);
   if (response.error) return showToast('error', response.error);
   handleUser({...user, following: user.following + 1});
   if (following) setFollowing((prev: any) => [...prev, data.remote]);
@@ -45,9 +46,9 @@ export const handleRemove = async (
   followers: any,
   setFollowers: any,
 ) => {
-  const response = await follows.remove(userId);
+  const response = await api.follows.remove(userId);
   if (response.error) return showToast('error', response.error);
-  handleUser({...user, following: user.followers - 1});
+  handleUser({followers: user.followers - 1});
   setFollowers(followers.filter((item: any) => item.user.id !== userId));
   return;
 };
@@ -65,7 +66,7 @@ export const handleFollowRequest = async (
     },
     userId,
   };
-  const response = await follows.request(data);
+  const response = await api.follows.request(data);
   if (response.error) return showToast('error', response.error);
   return (
     setRelations &&
@@ -84,7 +85,7 @@ export const handleUnfollow = async (
   setFollowing: any,
   setRelations?: any,
 ) => {
-  const response = await follows.unfollow(userId);
+  const response = await api.follows.unfollow(userId);
   if (response.error) return showToast('error', response.error);
   handleUser({...user, following: user.following - 1});
   if (following)
@@ -102,7 +103,7 @@ export const handleRemoveRequest = async (
   userId: string,
   setRelations?: any,
 ) => {
-  const response = await follows.removeRequest(userId);
+  const response = await api.follows.removeRequest(userId);
   if (response.error) return showToast('error', response.error);
   return (
     setRelations &&
@@ -111,6 +112,7 @@ export const handleRemoveRequest = async (
 };
 
 export const handleAccept = async (
+  requestId: string,
   user: IUser,
   remoteUser: any,
   handleUser: any,
@@ -133,10 +135,10 @@ export const handleAccept = async (
   setFollowRequests((prev: any) =>
     prev.filter((item: any) => item.from.id !== remoteUser.id),
   );
-  const response = await follows.accept(remoteUser.id, data);
+  const response = await api.follows.accept(requestId, data);
   if (response.error) return showToast('error', response.error);
   handleUser({...user, following: user.following + 1});
-  if (followers) setFollowers((prev: any) => [...prev, remoteUser]);
+  if (followers) setFollowers((prev: any) => [...prev, response.data]);
   return;
 };
 
@@ -144,7 +146,7 @@ export const handleReject = async (requestId: any, setFollowRequests: any) => {
   setFollowRequests((prev: any) =>
     prev.filter((item: any) => item.id !== requestId),
   );
-  const response = await follows.reject(requestId);
+  const response = await api.follows.reject(requestId);
   if (response.error) return showToast('error', response.error);
   return;
 };

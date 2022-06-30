@@ -46,13 +46,14 @@ function SmallUserTile({id, username, avatar, type, requestId}: Props) {
     } else if (type === 'followers')
       handleRemoveFollower(user, id, handleUser, followers, setFollowers);
     else if (type === 'friends')
-      handleRemoveFriend(id, requestId, friends, setFriends);
+      handleRemoveFriend(requestId, friends, setFriends, user, handleUser);
   };
 
   const _handleAccept = async () => {
     const remoteUser = {id, username, avatar};
-    if (type == 'followRequest') {
+    if (type === 'followRequest') {
       await handleAcceptFollow(
+        requestId,
         user,
         remoteUser,
         handleUser,
@@ -67,15 +68,22 @@ function SmallUserTile({id, username, avatar, type, requestId}: Props) {
         friends,
         setFriends,
         setFriendRequests,
+        user,
+        handleUser,
       );
     }
   };
 
   const _handleReject = async () => {
-    if (type == 'followRequest') {
+    if (type === 'followRequest') {
       await handleRejectFollow(requestId, setFollowRequests);
     } else {
-      await handleRejectFriend(id, requestId, friends, setFriends);
+      await handleRejectFriend(
+        requestId,
+        friends,
+        setFriends,
+        setFriendRequests,
+      );
     }
   };
 
