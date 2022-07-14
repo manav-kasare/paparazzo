@@ -13,7 +13,7 @@ import {
   handleUnfollow,
 } from '../services/helpers/follows';
 import {
-  handleRemove,
+  handleRemove as handleRemoveFriend,
   handleRemoveRequest as handleRemoveFriendRequest,
   handleRequest as handleFriendRequest,
 } from '../services/helpers/friends';
@@ -105,7 +105,7 @@ export default function User() {
 
   const onPresssFriendButton = async () => {
     if (relations.isFriend) {
-      await handleRemove(id, friends, setFriends, setRelations);
+      await handleRemoveFriend(id, friends, setFriends, setRelations);
     } else {
       if (relations.friendRequested) {
         const response = await api.friends.getRequest(id);
@@ -244,12 +244,12 @@ export default function User() {
                 {relations.isFriend
                   ? 'Friends'
                   : relations.friendRequested
-                  ? 'Freind Requested'
-                  : 'Freind Request'}
+                  ? 'Friend Requested'
+                  : 'Friend Request'}
               </Text>
             </Button>
           </Block>
-          {!relations.isFriend && (
+          {relations.isFriend && (
             <Button
               onPress={handlePost}
               color={colors.background}
